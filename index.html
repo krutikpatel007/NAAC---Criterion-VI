@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NAAC Criterion VI - Evidence & Gap Analysis Tracker</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+              950: '#1e1b4b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- SheetJS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col transition-colors duration-200">
+
+  <!-- Top Sticky Navigation -->
+  <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-slate-200 dark:border-slate-800 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Brand / Identity -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 text-white flex items-center justify-center shadow-md shadow-indigo-500/20">
+            <i class="fa-solid fa-graduation-cap text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <h1 class="font-bold text-lg leading-tight tracking-tight text-slate-900 dark:text-white">NAAC Evidence & Gap Tracker</h1>
+              <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/60 dark:text-indigo-300">Criterion VI</span>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Governance, Leadership and Management (Weightage: 100)</p>
+          </div>
+        </div>
+
+        <!-- Criteria Switcher & Quick Actions -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          
+          <!-- Criteria Selector Dropdown -->
+          <div class="relative">
+            <select id="criteria-select" class="text-xs sm:text-sm font-medium bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-3 py-1.5 pr-8 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+              <option value="Criterion VI" selected>Criterion VI: Governance (100)</option>
+              <option value="Criterion I">Criterion I: Curricular (150)</option>
+              <option value="Criterion II">Criterion II: Teaching-Learning (200)</option>
+              <option value="Criterion III">Criterion III: Research (250)</option>
+              <option value="Criterion IV">Criterion IV: Infrastructure (100)</option>
+              <option value="Criterion V">Criterion V: Student Support (100)</option>
+              <option value="Criterion VII">Criterion VII: Institutional Values (100)</option>
+            </select>
+          </div>
+
+          <!-- Deploy to GitHub Modal Trigger -->
+          <button id="btn-github-guide" class="hidden md:flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-white rounded-lg shadow-sm transition hover:shadow">
+            <i class="fa-brands fa-github"></i>
+            <span>Host on GitHub</span>
+          </button>
+
+          <!-- Export Excel -->
+          <button id="btn-export-excel" title="Export Updated Excel" class="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-sm transition">
+            <i class="fa-solid fa-file-excel"></i>
+            <span class="hidden sm:inline">Export Excel</span>
+          </button>
+
+          <!-- Data Backup & Restore -->
+          <button id="btn-backup-restore" title="Backup or Restore Data" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+            <i class="fa-solid fa-database"></i>
+          </button>
+
+          <!-- Print Report -->
+          <button id="btn-print-report" title="Print SSR Audit Summary" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+            <i class="fa-solid fa-print"></i>
+          </button>
+
+          <!-- Dark Mode Toggle -->
+          <button id="btn-theme-toggle" title="Toggle Dark/Light Mode" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+            <i class="fa-solid fa-moon dark:hidden"></i>
+            <i class="fa-solid fa-sun hidden dark:inline"></i>
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Executive KPI Summary Header -->
+  <div class="bg-white dark:bg-slate-850 border-b border-slate-200 dark:border-slate-800 py-4 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
+        
+        <!-- Card 1: Total Weightage -->
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Total Weightage</div>
+            <div class="text-lg font-bold text-slate-900 dark:text-white" id="stat-weightage">100</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Readiness Score -->
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Readiness</span>
+              <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400" id="stat-readiness-percent">0%</span>
+            </div>
+            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full mt-1 overflow-hidden">
+              <div id="stat-readiness-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Metrics Breakdown -->
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Metrics Tracked</div>
+            <div class="text-sm font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+              <span id="stat-completed-count" class="text-emerald-600" title="Completed">0</span>
+              <span class="text-slate-400">/</span>
+              <span id="stat-inprogress-count" class="text-amber-500" title="In Progress">0</span>
+              <span class="text-slate-400">/</span>
+              <span id="stat-total-count" class="text-slate-600 dark:text-slate-300" title="Total">16</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Evidence Files -->
+        <div class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-folder-open"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Evidence Logged</div>
+            <div class="text-lg font-bold text-slate-900 dark:text-white" id="stat-files-count">0 Files</div>
+          </div>
+        </div>
+
+        <!-- Card 5: Critical Gaps -->
+        <div class="col-span-2 md:col-span-1 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/60 flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-lg bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">Action Gaps</div>
+            <div class="text-lg font-bold text-rose-600 dark:text-rose-400" id="stat-gaps-count">0 Needs Review</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Navigation Tabs (Folder View vs Matrix View vs Analytics) -->
+      <div class="flex items-center space-x-2 mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 overflow-x-auto">
+        <button id="tab-btn-folders" class="view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition bg-indigo-600 text-white shadow-sm">
+          <i class="fa-solid fa-folder-tree"></i>
+          <span>Evidence Repository (Folders)</span>
+        </button>
+
+        <button id="tab-btn-matrix" class="view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="fa-solid fa-table-cells"></i>
+          <span>Gap Analysis & 5-Year Matrix</span>
+        </button>
+
+        <button id="tab-btn-analytics" class="view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Executive Analytics</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Main View Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    
+    <!-- VIEW 1: EVIDENCE REPOSITORY & FOLDER TREE -->
+    <section id="view-folders" class="animate-fade-in">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left Column: Interactive Folder Tree (4 cols) -->
+        <div class="lg:col-span-4 bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm flex flex-col h-[750px]">
+          
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-sitemap text-indigo-600"></i>
+              <span class="font-bold text-sm text-slate-900 dark:text-white">Folder Hierarchy</span>
+            </div>
+            <span class="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-0.5 rounded font-mono" id="tree-folders-count">16 Folders</span>
+          </div>
+
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 mb-3">
+            Select any folder to inspect SSR evidence checklist and log verified documentation.
+          </p>
+
+          <!-- Tree List Scrollable Container -->
+          <div class="flex-1 overflow-y-auto pr-1 space-y-2" id="folder-tree-container">
+            <!-- Injected by JavaScript -->
+          </div>
+
+          <div class="pt-3 mt-2 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+            <span>Root: <code class="text-indigo-600 font-mono">NAAC – Criterion VI</code></span>
+            <button id="btn-copy-root-path" title="Copy Root Directory Path" class="hover:text-indigo-600 transition">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Right Column: Active Folder Workspace (8 cols) -->
+        <div class="lg:col-span-8 space-y-5" id="folder-workspace-container">
+          <!-- Injected by JavaScript based on active folder -->
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- VIEW 2: GAP ANALYSIS & 5-YEAR MATRIX -->
+    <section id="view-matrix" class="hidden animate-fade-in space-y-4">
+      
+      <!-- Filter Toolbar -->
+      <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm flex flex-wrap items-center justify-between gap-3">
+        
+        <!-- Search Input -->
+        <div class="relative flex-1 min-w-[240px]">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+          <input type="text" id="matrix-search" placeholder="Search metric (e.g. 6.1.1, vision, budget, audit)..." class="w-full text-xs sm:text-sm pl-9 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+        </div>
+
+        <!-- Indicator Filter -->
+        <select id="filter-indicator" class="text-xs sm:text-sm py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="ALL">All Key Indicators</option>
+          <option value="6.1">6.1 Vision & Leadership</option>
+          <option value="6.2">6.2 Strategy & Deployment</option>
+          <option value="6.3">6.3 Faculty Empowerment</option>
+          <option value="6.4">6.4 Financial Management</option>
+          <option value="6.5">6.5 IQAC Assurance</option>
+        </select>
+
+        <!-- Status Filter -->
+        <select id="filter-status" class="text-xs sm:text-sm py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="ALL">All Statuses</option>
+          <option value="Completed">Completed / Verified</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Under Review">Under Review</option>
+          <option value="Not Started">Not Started</option>
+        </select>
+
+        <!-- Metric Type Filter -->
+        <select id="filter-type" class="text-xs sm:text-sm py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="ALL">All Types (QlM & QnM)</option>
+          <option value="QlM">Qualitative (QlM)</option>
+          <option value="QnM">Quantitative (QnM)</option>
+        </select>
+
+        <!-- View Mode: Cards vs Compact Table -->
+        <div class="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl p-1 border border-slate-200 dark:border-slate-700">
+          <button id="btn-view-cards" title="Card View" class="px-2.5 py-1 text-xs rounded-lg font-medium transition bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm">
+            <i class="fa-solid fa-grip"></i>
+          </button>
+          <button id="btn-view-table" title="Table View" class="px-2.5 py-1 text-xs rounded-lg font-medium transition text-slate-600 dark:text-slate-400 hover:text-slate-900">
+            <i class="fa-solid fa-list"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Year Pill Instruction Help Banner -->
+      <div class="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/60 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-indigo-900 dark:text-indigo-200">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-circle-info text-indigo-600"></i>
+          <span><strong>Interactive 5-Year Assessment:</strong> Click on any year pill (<span class="px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-semibold">Available</span>, <span class="px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-semibold">Partial</span>, <span class="px-1.5 py-0.5 rounded bg-rose-100 text-rose-800 text-[10px] font-semibold">Missing</span>) to cycle its status.</span>
+        </div>
+        <span class="hidden md:inline text-indigo-600 dark:text-indigo-400 font-medium">Auto-saved locally</span>
+      </div>
+
+      <!-- Container for Matrix Cards or Table -->
+      <div id="matrix-items-container" class="space-y-4">
+        <!-- Injected by JavaScript -->
+      </div>
+
+    </section>
+
+
+    <!-- VIEW 3: EXECUTIVE ANALYTICS -->
+    <section id="view-analytics" class="hidden animate-fade-in space-y-6">
+      
+      <!-- Top Row Charts -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Chart 1: Key Indicator Readiness -->
+        <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
+              <i class="fa-solid fa-chart-column text-indigo-600"></i>
+              <span>Key Indicator Readiness (% Completion)</span>
+            </h3>
+          </div>
+          <div class="h-64">
+            <canvas id="chart-indicator-readiness"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Metric Status Distribution -->
+        <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
+              <i class="fa-solid fa-chart-pie text-emerald-600"></i>
+              <span>Overall Implementation Status</span>
+            </h3>
+          </div>
+          <div class="h-64 flex items-center justify-center">
+            <canvas id="chart-status-pie"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Second Row: 5-Year Compliance Heatmap Trend -->
+      <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
+            <i class="fa-solid fa-timeline text-blue-600"></i>
+            <span>5-Year Evidence Availability Trend (2021-22 to 2025-26)</span>
+          </h3>
+          <span class="text-xs text-slate-400">Available vs Partial vs Missing</span>
+        </div>
+        <div class="h-64">
+          <canvas id="chart-five-year"></canvas>
+        </div>
+      </div>
+
+      <!-- High Weightage Priority Table -->
+      <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
+              <i class="fa-solid fa-award text-amber-500"></i>
+              <span>High-Weightage Metric Focus (Maximum CGPA Impact)</span>
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Metrics with weightage >= 7 constitute the majority of Criterion VI score.</p>
+          </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300">
+            <thead class="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-semibold border-b border-slate-200 dark:border-slate-700">
+              <tr>
+                <th class="py-2.5 px-3">Metric</th>
+                <th class="py-2.5 px-3">Weightage</th>
+                <th class="py-2.5 px-3">Key Indicator</th>
+                <th class="py-2.5 px-3">Metric Title</th>
+                <th class="py-2.5 px-3">Status</th>
+                <th class="py-2.5 px-3">Action Required</th>
+              </tr>
+            </thead>
+            <tbody id="high-weightage-tbody" class="divide-y divide-slate-100 dark:divide-slate-800">
+              <!-- Injected by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- MODAL: GITHUB HOSTING GUIDE -->
+  <div id="modal-github" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto animate-fade-in">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-lg">
+            <i class="fa-brands fa-github"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-slate-900 dark:text-white">Host This Tracker on GitHub Pages</h3>
+            <p class="text-xs text-slate-500">Free, public or private hosting with zero build configuration</p>
+          </div>
+        </div>
+        <button id="btn-close-github-modal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+        
+        <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-800 dark:text-amber-200">
+          <i class="fa-solid fa-circle-check text-amber-600 mr-1.5"></i>
+          This app is 100% client-side (HTML/CSS/JS). It works immediately on GitHub Pages without installing Node.js, Vite, or Docker!
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 dark:text-slate-100 mb-1">Step 1: Create a New GitHub Repository</h4>
+          <p class="text-xs text-slate-500 mb-2">Go to <a href="https://github.com/new" target="_blank" class="text-indigo-600 underline">github.com/new</a> and create a repository named e.g. <code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono">naac-criterion-6-tracker</code>.</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 dark:text-slate-100 mb-1">Step 2: Push Current Folder to GitHub</h4>
+          <p class="text-xs text-slate-500 mb-2">Run these commands inside this folder in PowerShell or Git Bash:</p>
+          
+          <div class="relative bg-slate-900 text-slate-200 p-3 rounded-xl font-mono text-xs overflow-x-auto">
+            <button id="btn-copy-git-cmd" class="absolute top-2.5 right-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 rounded text-[11px] transition">
+              <i class="fa-regular fa-copy mr-1"></i> Copy
+            </button>
+            <pre id="git-commands-block">git init
+git add .
+git commit -m "Initial commit of NAAC Criterion VI Tracker"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/naac-criterion-6-tracker.git
+git push -u origin main</pre>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 dark:text-slate-100 mb-1">Step 3: Enable GitHub Pages in 2 Clicks</h4>
+          <ol class="list-decimal list-inside space-y-1 text-xs text-slate-500 dark:text-slate-400">
+            <li>In your GitHub repo, click <strong>Settings</strong> &gt; <strong>Pages</strong> (on left sidebar).</li>
+            <li>Under <strong>Build and deployment</strong> &gt; <strong>Branch</strong>, select <code class="font-mono text-indigo-500">main</code> and folder <code class="font-mono text-indigo-500">/ (root)</code>.</li>
+            <li>Click <strong>Save</strong>. In ~1 minute, your live URL will appear: <code class="text-emerald-600 font-semibold">https://YOUR_USERNAME.github.io/naac-criterion-6-tracker/</code>!</li>
+          </ol>
+        </div>
+
+      </div>
+
+      <div class="pt-3 border-t border-slate-200 dark:border-slate-700 flex justify-end">
+        <button id="btn-dismiss-github-modal" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl transition">
+          Got It!
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL: ADD / LOG EVIDENCE FILE -->
+  <div id="modal-add-file" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-lg w-full p-6 shadow-2xl space-y-4 animate-fade-in">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-file-circle-plus text-indigo-600"></i>
+          <h3 class="font-bold text-base text-slate-900 dark:text-white">Log Evidence File</h3>
+        </div>
+        <button id="btn-close-file-modal" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-add-file" class="space-y-3 text-xs sm:text-sm">
+        <div>
+          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">File Name / Document Title</label>
+          <input type="text" id="input-file-name" required placeholder="e.g. Vision_Mission_Resolution_BoM_2022.pdf" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Academic Year</label>
+            <select id="input-file-year" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100">
+              <option value="2021-22">2021-22</option>
+              <option value="2022-23">2022-23</option>
+              <option value="2023-24">2023-24</option>
+              <option value="2024-25">2024-25</option>
+              <option value="2025-26">2025-26</option>
+              <option value="Consolidated (5 Years)">Consolidated (5 Years)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Verification Status</label>
+            <select id="input-file-status" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100">
+              <option value="Verified by IQAC">Verified by IQAC</option>
+              <option value="Ready for SSR">Ready for SSR</option>
+              <option value="Under Review">Under Review</option>
+              <option value="Draft">Draft</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Notes / Sign-off Authority</label>
+          <input type="text" id="input-file-notes" placeholder="e.g. Signed by Registrar & Finance Officer, Annexure-1 attached" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+        </div>
+
+        <div class="pt-3 flex justify-end space-x-2 border-t border-slate-200 dark:border-slate-700">
+          <button type="button" id="btn-cancel-file-modal" class="px-4 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition shadow-sm">
+            Save Evidence
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL: BACKUP & RESTORE -->
+  <div id="modal-backup" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-md w-full p-6 shadow-2xl space-y-4 animate-fade-in">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-database text-indigo-600"></i>
+          <h3 class="font-bold text-base text-slate-900 dark:text-white">Data Backup & Storage</h3>
+        </div>
+        <button id="btn-close-backup-modal" class="text-slate-400 hover:text-slate-600">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm">
+        
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+          <h4 class="font-semibold text-slate-800 dark:text-slate-200 flex items-center space-x-2">
+            <i class="fa-solid fa-download text-emerald-600"></i>
+            <span>Export JSON Backup</span>
+          </h4>
+          <p class="text-xs text-slate-500">Download all your logged evidence, gap remarks, and 5-year statuses into a portable JSON backup file.</p>
+          <button id="btn-download-json" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg transition text-xs">
+            Download Backup (.json)
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2">
+          <h4 class="font-semibold text-slate-800 dark:text-slate-200 flex items-center space-x-2">
+            <i class="fa-solid fa-upload text-blue-600"></i>
+            <span>Restore from Backup</span>
+          </h4>
+          <p class="text-xs text-slate-500">Upload a previously exported JSON backup to synchronize data.</p>
+          <input type="file" id="input-restore-file" accept=".json" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+        </div>
+
+        <div class="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 space-y-2">
+          <h4 class="font-semibold text-rose-700 dark:text-rose-400 flex items-center space-x-2">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Reset to Default Template</span>
+          </h4>
+          <p class="text-xs text-rose-600/80 dark:text-rose-400/80">Erase changes and reload the fresh NAAC Criterion VI template.</p>
+          <button id="btn-reset-data" class="w-full py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg transition text-xs">
+            Reset Template Data
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- PRINTABLE SSR AUDIT SUMMARY (VISIBLE ONLY WHEN PRINTING) -->
+  <div id="print-container" class="print-only hidden p-8">
+    <div class="border-b-2 border-slate-900 pb-4 mb-6">
+      <h1 class="text-2xl font-bold uppercase tracking-wider text-slate-900">NAAC SSR Assessment & Gap Analysis Report</h1>
+      <h2 class="text-base font-semibold text-slate-700 mt-1">Criterion VI: Governance, Leadership and Management (Total Weightage: 100)</h2>
+      <p class="text-xs text-slate-500 mt-1">Generated on: <span id="print-date"></span> | Institutional Evidence Repository Audit</p>
+    </div>
+
+    <div class="mb-6">
+      <h3 class="text-sm font-bold uppercase text-slate-800 mb-2">Executive Summary</h3>
+      <table class="w-full text-xs mb-4 border">
+        <tr class="bg-slate-100">
+          <th class="p-2 border font-bold">Total Weightage</th>
+          <th class="p-2 border font-bold">Readiness %</th>
+          <th class="p-2 border font-bold">Completed Metrics</th>
+          <th class="p-2 border font-bold">In Progress</th>
+          <th class="p-2 border font-bold">Gaps Identified</th>
+        </tr>
+        <tr class="text-center">
+          <td class="p-2 border font-bold">100</td>
+          <td class="p-2 border font-bold text-emerald-700" id="print-readiness">0%</td>
+          <td class="p-2 border" id="print-completed">0</td>
+          <td class="p-2 border" id="print-inprogress">0</td>
+          <td class="p-2 border text-rose-700" id="print-gaps">0</td>
+        </tr>
+      </table>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-bold uppercase text-slate-800 mb-2">Metrics & 5-Year Status Audit Matrix</h3>
+      <table class="w-full text-[11px] border border-collapse" id="print-table">
+        <thead class="bg-slate-200 text-slate-800 font-bold">
+          <tr>
+            <th class="p-1.5 border">Metric</th>
+            <th class="p-1.5 border">Weight</th>
+            <th class="p-1.5 border">Indicator & Evidence Folder</th>
+            <th class="p-1.5 border">2021-22</th>
+            <th class="p-1.5 border">2022-23</th>
+            <th class="p-1.5 border">2023-24</th>
+            <th class="p-1.5 border">2024-25</th>
+            <th class="p-1.5 border">2025-26</th>
+            <th class="p-1.5 border">Dept / Action Plan</th>
+          </tr>
+        </thead>
+        <tbody id="print-tbody">
+          <!-- Injected by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- Floating Toast Notifications -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none no-print"></div>
+
+  <!-- Load Data and Main Script -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

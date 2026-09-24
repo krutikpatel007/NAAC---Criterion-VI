@@ -1,0 +1,15 @@
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Office Temporary Files
+~$*.xlsx
+~$*.docx
+~$*.pptx
+
+# Node / Scratch
+node_modules/
+*.log
