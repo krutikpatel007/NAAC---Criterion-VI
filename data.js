@@ -27,6 +27,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -66,6 +67,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -101,6 +103,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -144,6 +147,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -179,6 +183,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -214,6 +219,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -249,6 +255,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -284,6 +291,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -315,6 +323,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -346,6 +355,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -385,6 +395,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -420,6 +431,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -469,6 +481,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -508,6 +521,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -551,6 +565,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -594,6 +609,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -629,6 +645,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -656,6 +673,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -703,6 +721,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -734,6 +753,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -773,6 +793,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -808,6 +829,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -839,6 +861,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -874,6 +897,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -917,6 +941,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -952,6 +977,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -987,6 +1013,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1026,6 +1053,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1061,6 +1089,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1088,6 +1117,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1131,6 +1161,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1162,6 +1193,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1201,6 +1233,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1232,6 +1265,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1273,6 +1307,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1308,6 +1343,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1339,6 +1375,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1370,6 +1407,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1405,6 +1443,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1436,6 +1475,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1467,6 +1507,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1498,6 +1539,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1533,6 +1575,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1564,6 +1607,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1595,6 +1639,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1630,6 +1675,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1669,6 +1715,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1716,6 +1763,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1763,6 +1811,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1802,6 +1851,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1837,6 +1887,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1868,6 +1919,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1899,6 +1951,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1930,6 +1983,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1961,6 +2015,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -1992,6 +2047,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2027,6 +2083,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2058,6 +2115,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2093,6 +2151,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2128,6 +2187,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2159,6 +2219,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2190,6 +2251,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2225,6 +2287,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2256,6 +2319,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2297,6 +2361,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2328,6 +2393,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2355,6 +2421,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2386,6 +2453,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2417,6 +2485,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2452,6 +2521,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2487,6 +2557,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2518,6 +2589,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2549,6 +2621,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2592,6 +2665,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2623,6 +2697,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2650,6 +2725,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2685,6 +2761,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2716,6 +2793,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2743,6 +2821,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2778,6 +2857,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2813,6 +2893,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2844,6 +2925,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2879,6 +2961,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2910,6 +2993,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2955,6 +3039,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -2994,6 +3079,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3025,6 +3111,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3072,6 +3159,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3099,6 +3187,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3130,6 +3219,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3173,6 +3263,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3200,6 +3291,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3231,6 +3323,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3258,6 +3351,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3293,6 +3387,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3332,6 +3427,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3367,6 +3463,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3404,6 +3501,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.1 Vision & Leadership/6.1.1 Vision Mission",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3444,6 +3542,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.1 Vision & Leadership/6.1.2 Decentralization",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3484,6 +3583,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.2 Strategy & Deployment/6.2.1 Strategic Plan",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3528,6 +3628,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.2 Strategy & Deployment/6.2.2 Institutional Bodies",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3576,6 +3677,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.2 Strategy & Deployment/6.2.3 E-Governance",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3613,6 +3715,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.3 Faculty & Staff Empowerment/6.3.1 Welfare",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3657,6 +3760,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.3 Faculty & Staff Empowerment/6.3.2 Financial Support",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3702,6 +3806,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.3 Faculty & Staff Empowerment/6.3.3 Professional Development",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3751,6 +3856,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.3 Faculty & Staff Empowerment/6.3.4 FDP Participation",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3788,6 +3894,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.3 Faculty & Staff Empowerment/6.3.5 Performance Appraisal",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3824,6 +3931,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.4 Financial Management/6.4.1 Resource Mobilization",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3860,6 +3968,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.4 Financial Management/6.4.2 Grants",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3917,6 +4026,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.4 Financial Management/6.4.3 Financial Audit",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3961,6 +4071,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.5 IQAC/6.5.1 IQAC Mechanism",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -3992,6 +4103,7 @@ window.DEFAULT_NAAC_DATA = {
         "checklist": [],
         "folder": "6.5 IQAC/6.5.2 Quality Initiatives",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4038,6 +4150,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "6.5 IQAC/6.5.3 Impact Analysis",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4084,6 +4197,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4106,6 +4220,7 @@ window.DEFAULT_NAAC_DATA = {
         "checklist": [],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4141,6 +4256,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4168,6 +4284,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4199,6 +4316,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4234,6 +4352,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4256,6 +4375,7 @@ window.DEFAULT_NAAC_DATA = {
         "checklist": [],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4291,6 +4411,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4313,6 +4434,7 @@ window.DEFAULT_NAAC_DATA = {
         "checklist": [],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4348,6 +4470,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4387,6 +4510,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4414,6 +4538,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4445,6 +4570,7 @@ window.DEFAULT_NAAC_DATA = {
         ],
         "folder": "",
         "years": {
+          "2020-21": "Pending",
           "2021-22": "Pending",
           "2022-23": "Pending",
           "2023-24": "Pending",
@@ -4460,3 +4586,703 @@ window.DEFAULT_NAAC_DATA = {
     ]
   }
 };
+
+// Specific NAAC Criterion VI Mandatory Documents List
+window.CRITERION_VI_SPECIFIC_DOCS = [
+  {
+    "id": "doc-611-1",
+    "metric": "6.1.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.1 Vision & Leadership/6.1.1 Vision Mission",
+    "dept": "Governing Council / Director",
+    "title": "Approved Vision and Mission Statement Document",
+    "desc": "Official institutional Vision & Mission document as approved by statutory body.",
+    "status": "DONT_HAVE",
+    "action": "Extract from Institute calendar or official website; get Registrar stamp"
+  },
+  {
+    "id": "doc-611-2",
+    "metric": "6.1.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.1 Vision & Leadership/6.1.1 Vision Mission",
+    "dept": "Governing Council / Director",
+    "title": "Minutes of Governing Body/Syndicate adopting Vision & Mission",
+    "desc": "Extract of GC/BoM resolution approving Vision & Mission statement.",
+    "status": "DONT_HAVE",
+    "action": "Request GC meeting minutes extract from Director/Registrar office"
+  },
+  {
+    "id": "doc-611-3",
+    "metric": "6.1.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.1 Vision & Leadership/6.1.1 Vision Mission",
+    "dept": "IQAC",
+    "title": "Report of Institutional Achievements led to Excellence",
+    "desc": "Summary report of key academic and administrative excellence achievements.",
+    "status": "DONT_HAVE",
+    "action": "Compile 3-page summary of accreditations, awards, student ranks"
+  },
+  {
+    "id": "doc-611-4",
+    "metric": "6.1.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.1 Vision & Leadership/6.1.1 Vision Mission",
+    "dept": "IT / Web Admin",
+    "title": "Website Screenshot of Vision & Mission Web Links",
+    "desc": "Live website screenshots showing display in entrance/departments.",
+    "status": "DONT_HAVE",
+    "action": "Take geo-tagged photos and website screenshots"
+  },
+  {
+    "id": "doc-612-1",
+    "metric": "6.1.2",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.1 Vision & Leadership/6.1.2 Decentralization",
+    "dept": "Principal / Deans",
+    "title": "Decentralization Case Study Document (<= 500 words)",
+    "desc": "Formal write-up detailing operational autonomy given to departments/committees.",
+    "status": "DONT_HAVE",
+    "action": "Write 500 words case study on exam decentralization or budget devolution"
+  },
+  {
+    "id": "doc-612-2",
+    "metric": "6.1.2",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.1 Vision & Leadership/6.1.2 Decentralization",
+    "dept": "Registrar",
+    "title": "Office Orders Delegating Powers to HODs/Committees",
+    "desc": "Sanction orders showing administrative & financial authority delegation.",
+    "status": "DONT_HAVE",
+    "action": "Collect circulars issued to HODs delegating expenditure/leave approvals"
+  },
+  {
+    "id": "doc-612-3",
+    "metric": "6.1.2",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.1 Vision & Leadership/6.1.2 Decentralization",
+    "dept": "SCSA - HOD",
+    "title": "Sample Minutes of Department/Participative Committees",
+    "desc": "Minutes showing active faculty & staff involvement in decision making.",
+    "status": "DONT_HAVE",
+    "action": "Attach minutes of 3 departmental/advisory meetings with attendance"
+  },
+  {
+    "id": "doc-621-1",
+    "metric": "6.2.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.2 Strategy & Deployment/6.2.1 Strategic Plan",
+    "dept": "SCSA - HOD",
+    "title": "Institutional Strategic / Perspective Plan Document",
+    "desc": "Published 5-year perspective strategic plan document.",
+    "status": "DONT_HAVE",
+    "action": "Obtain published Strategic Plan 2021-2026 PDF"
+  },
+  {
+    "id": "doc-621-2",
+    "metric": "6.2.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.2 Strategy & Deployment/6.2.1 Strategic Plan",
+    "dept": "SCSA - HOD",
+    "title": "Governing Council Minutes on Strategic Plan Adoption",
+    "desc": "Resolution copy adopting the strategic development deliverables.",
+    "status": "DONT_HAVE",
+    "action": "Extract GC resolution signed by Chairman/Member Secretary"
+  },
+  {
+    "id": "doc-621-3",
+    "metric": "6.2.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.2 Strategy & Deployment/6.2.1 Strategic Plan",
+    "dept": "SCSA - HOD",
+    "title": "Strategic Plan Deployment & Monitoring Report",
+    "desc": "Annual progress report on deliverables, targets achieved vs planned.",
+    "status": "DONT_HAVE",
+    "action": "Prepare tabular checklist of targets met (lab additions, courses, etc.)"
+  },
+  {
+    "id": "doc-622-1",
+    "metric": "6.2.2",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.2 Strategy & Deployment/6.2.2 Institutional Bodies",
+    "dept": "SCSA - HOD",
+    "title": "Approved Institutional Organogram",
+    "desc": "Official organizational hierarchy chart approved by management.",
+    "status": "DONT_HAVE",
+    "action": "Export high-res organogram with Dean, HOD, and Cell linkages"
+  },
+  {
+    "id": "doc-622-2",
+    "metric": "6.2.2",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.2 Strategy & Deployment/6.2.2 Institutional Bodies",
+    "dept": "ADMIN / HR",
+    "title": "Service Rules, Appointment & Promotion Policy Manual",
+    "desc": "Staff hand book detailing HR policies, leave rules, and code of conduct.",
+    "status": "DONT_HAVE",
+    "action": "Gather approved HR Service Manual PDF"
+  },
+  {
+    "id": "doc-622-3",
+    "metric": "6.2.2",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.2 Strategy & Deployment/6.2.2 Institutional Bodies",
+    "dept": "SCSA - HOD",
+    "title": "Annual Administrative Reports (Last 5 Years)",
+    "desc": "Consolidated annual reports of the institution from 2021-22 to 2025-26.",
+    "status": "DONT_HAVE",
+    "action": "Collect PDF copies of Annual Reports for each assessed year"
+  },
+  {
+    "id": "doc-622-4",
+    "metric": "6.2.2",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.2 Strategy & Deployment/6.2.2 Institutional Bodies",
+    "dept": "Registrar",
+    "title": "Minutes of Statutory Bodies & Committees",
+    "desc": "Minutes of Governing Body, Academic Council, and grievance redressal.",
+    "status": "DONT_HAVE",
+    "action": "Compile signed meeting minutes extracts with sign-offs"
+  },
+  {
+    "id": "doc-623-1",
+    "metric": "6.2.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.2 Strategy & Deployment/6.2.3 E-Governance",
+    "dept": "SCSA - HOD",
+    "title": "Institutional Budget Statements for E-Governance",
+    "desc": "Audited accounts highlighting expenditure on ERP, hardware, software.",
+    "status": "DONT_HAVE",
+    "action": "Get Finance Officer certified budget extracts for software/ERP"
+  },
+  {
+    "id": "doc-623-2",
+    "metric": "6.2.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.2 Strategy & Deployment/6.2.3 E-Governance",
+    "dept": "SCSA - HOD",
+    "title": "ERP Implementation Vendor Agreement & Invoices",
+    "desc": "Valid AMC contracts, license agreements, and purchase invoices.",
+    "status": "DONT_HAVE",
+    "action": "Scan ERP vendor purchase orders, AMC agreements, and paid bills"
+  },
+  {
+    "id": "doc-623-3",
+    "metric": "6.2.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.2 Strategy & Deployment/6.2.3 E-Governance",
+    "dept": "SCSA - HOD",
+    "title": "ERP Screenshots of User Interfaces (All 5 Areas)",
+    "desc": "Full page screen captures showing URL, institutional logo, user login.",
+    "status": "DONT_HAVE",
+    "action": "Take screenshots of: (1) Admin, (2) Finance, (3) Admission, (4) Exam, (5) Planning"
+  },
+  {
+    "id": "doc-623-4",
+    "metric": "6.2.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.2 Strategy & Deployment/6.2.3 E-Governance",
+    "dept": "SCSA - HOD",
+    "title": "Data Template 6.2.3 for E-Governance",
+    "desc": "Standard NAAC excel template completed and verified.",
+    "status": "DONT_HAVE",
+    "action": "Fill NAAC template 6.2.3 with software names and deployment years"
+  },
+  {
+    "id": "doc-631-1",
+    "metric": "6.3.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.1 Welfare",
+    "dept": "ADMIN",
+    "title": "Policy Document on Staff Welfare Measures",
+    "desc": "Governing body approved policy on statutory & non-statutory benefits.",
+    "status": "DONT_HAVE",
+    "action": "Compile welfare policy booklet signed by Registrar"
+  },
+  {
+    "id": "doc-631-2",
+    "metric": "6.3.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.1 Welfare",
+    "dept": "ADMIN",
+    "title": "Consolidated List of Beneficiaries (Teaching & Non-Teaching)",
+    "desc": "Year-wise beneficiary lists for PF, ESI, gratuity, medical allowance, etc.",
+    "status": "DONT_HAVE",
+    "action": "Get HR/Accounts list of employees covered under PF/insurance"
+  },
+  {
+    "id": "doc-631-3",
+    "metric": "6.3.1",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.1 Welfare",
+    "dept": "ADMIN",
+    "title": "Audited Proof & Receipts of Welfare Schemes",
+    "desc": "PF deposit receipts, insurance premium receipts, maternity orders.",
+    "status": "DONT_HAVE",
+    "action": "Gather sample PF challans and maternity leave sanction letters"
+  },
+  {
+    "id": "doc-632-1",
+    "metric": "6.3.2",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.2 Financial Support",
+    "dept": "ADMIN",
+    "title": "Financial Support Policy for Conferences & Memberships",
+    "desc": "Rules and financial limits for faculty conference travel & reg fee.",
+    "status": "DONT_HAVE",
+    "action": "Retrieve approved financial support policy document"
+  },
+  {
+    "id": "doc-632-2",
+    "metric": "6.3.2",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.2 Financial Support",
+    "dept": "ADMIN",
+    "title": "E-Copies of Sanction Letters Signed by Finance Officer",
+    "desc": "Sanction orders issued to teachers indicating amount sanctioned.",
+    "status": "DONT_HAVE",
+    "action": "Collect sanction letters for each year 2021-22 to 2025-26"
+  },
+  {
+    "id": "doc-632-3",
+    "metric": "6.3.2",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.2 Financial Support",
+    "dept": "ADMIN",
+    "title": "Certificates of Conference Participation / Presentation",
+    "desc": "Participation certificates of supported faculty matching sanction letters.",
+    "status": "DONT_HAVE",
+    "action": "Collect faculty certificates matching the claim list"
+  },
+  {
+    "id": "doc-632-4",
+    "metric": "6.3.2",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.2 Financial Support",
+    "dept": "Finance",
+    "title": "Audited Statement Highlighting Financial Support",
+    "desc": "CA signed expenditure statements under faculty development head.",
+    "status": "DONT_HAVE",
+    "action": "Request CA extract highlighting financial support to teachers"
+  },
+  {
+    "id": "doc-632-5",
+    "metric": "6.3.2",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.2 Financial Support",
+    "dept": "ADMIN",
+    "title": "Data Template 6.3.2 Completed",
+    "desc": "Excel list of teachers, conference names, and amounts received.",
+    "status": "DONT_HAVE",
+    "action": "Fill template 6.3.2 with exact payment figures"
+  },
+  {
+    "id": "doc-633-1",
+    "metric": "6.3.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.3 Professional Development",
+    "dept": "SCSA - HOD",
+    "title": "Year-wise List of Professional Dev / Admin Training Programs",
+    "desc": "Master list of programs organized for teaching & non-teaching staff.",
+    "status": "DONT_HAVE",
+    "action": "Create consolidated list with title, dates, and target group"
+  },
+  {
+    "id": "doc-633-2",
+    "metric": "6.3.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.3 Professional Development",
+    "dept": "SCSA - HOD",
+    "title": "Program Brochures, Circulars & Schedules",
+    "desc": "Circulars issued prior to event and schedule flyers with resource persons.",
+    "status": "DONT_HAVE",
+    "action": "Collect event circulars/brochures for each organized FDP"
+  },
+  {
+    "id": "doc-633-3",
+    "metric": "6.3.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.3 Professional Development",
+    "dept": "SCSA - HOD",
+    "title": "Detailed Event Reports with Geo-tagged Photographs",
+    "desc": "Summary of outcomes, topics covered, and dated geo-tagged photos.",
+    "status": "DONT_HAVE",
+    "action": "Ensure every program has a signed report with 2-4 photos"
+  },
+  {
+    "id": "doc-633-4",
+    "metric": "6.3.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.3 Professional Development",
+    "dept": "SCSA - HOD",
+    "title": "Signed Participant Attendance Lists",
+    "desc": "Attendance sheets signed by participants and course coordinator.",
+    "status": "DONT_HAVE",
+    "action": "Scan physical attendance sheets for each workshop"
+  },
+  {
+    "id": "doc-633-5",
+    "metric": "6.3.3",
+    "weight": 5,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.3 Professional Development",
+    "dept": "SCSA - HOD",
+    "title": "Data Template 6.3.3 Completed",
+    "desc": "Standard NAAC excel template for organized programs.",
+    "status": "DONT_HAVE",
+    "action": "Fill template 6.3.3 with participant counts"
+  },
+  {
+    "id": "doc-634-1",
+    "metric": "6.3.4",
+    "weight": 7,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.4 FDP Participation",
+    "dept": "SCSA - HOD",
+    "title": "Participation Certificates of Teachers Undergoing FDPs",
+    "desc": "E-copies of certificates (Induction, Refresher, FDP >= 5 days).",
+    "status": "DONT_HAVE",
+    "action": "Collect certificates from all full-time teachers (must be >= 5 days)"
+  },
+  {
+    "id": "doc-634-2",
+    "metric": "6.3.4",
+    "weight": 7,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.4 FDP Participation",
+    "dept": "SCSA - HOD",
+    "title": "Annual List of Faculty Attending Programs Approved by Head",
+    "desc": "Consolidated list certified by Principal/Director.",
+    "status": "DONT_HAVE",
+    "action": "Prepare year-wise list counter-signed by Principal"
+  },
+  {
+    "id": "doc-634-3",
+    "metric": "6.3.4",
+    "weight": 7,
+    "type": "QnM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.4 FDP Participation",
+    "dept": "SCSA - HOD",
+    "title": "Data Template 6.3.4 Completed",
+    "desc": "Standard NAAC template with course duration and organization details.",
+    "status": "DONT_HAVE",
+    "action": "Verify course dates meet NAAC criteria and fill template"
+  },
+  {
+    "id": "doc-635-1",
+    "metric": "6.3.5",
+    "weight": 3,
+    "type": "QlM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.5 Performance Appraisal",
+    "dept": "HR",
+    "title": "Performance Appraisal Policy Document",
+    "desc": "Institutional policy on annual appraisal, API scores, and review.",
+    "status": "DONT_HAVE",
+    "action": "Attach approved PBAS/Appraisal policy manual"
+  },
+  {
+    "id": "doc-635-2",
+    "metric": "6.3.5",
+    "weight": 3,
+    "type": "QlM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.5 Performance Appraisal",
+    "dept": "HR",
+    "title": "Sample Filled Appraisal Forms (Teaching & Non-Teaching)",
+    "desc": "Redacted sample evaluation forms reviewed by HOD and committee.",
+    "status": "DONT_HAVE",
+    "action": "Select 3 sample filled forms (Prof, Assoc Prof, Asst Prof, Staff)"
+  },
+  {
+    "id": "doc-635-3",
+    "metric": "6.3.5",
+    "weight": 3,
+    "type": "QlM",
+    "folder": "6.3 Faculty & Staff Empowerment/6.3.5 Performance Appraisal",
+    "dept": "HR",
+    "title": "Evidence of Appraisal Outcomes & Career Advancement",
+    "desc": "Increment circulars, promotion orders, or merit awards based on appraisal.",
+    "status": "DONT_HAVE",
+    "action": "Attach sample promotion/increment sanction letters"
+  },
+  {
+    "id": "doc-641-1",
+    "metric": "6.4.1",
+    "weight": 8,
+    "type": "QlM",
+    "folder": "6.4 Financial Management/6.4.1 Resource Mobilization",
+    "dept": "Finance / Management",
+    "title": "Resource Mobilization Policy Document",
+    "desc": "BoM/Governing Council approved policy on fund mobilization & resource utilization.",
+    "status": "DONT_HAVE",
+    "action": "Retrieve official Resource Mobilization Policy with GC approval date"
+  },
+  {
+    "id": "doc-641-2",
+    "metric": "6.4.1",
+    "weight": 8,
+    "type": "QlM",
+    "folder": "6.4 Financial Management/6.4.1 Resource Mobilization",
+    "dept": "Finance",
+    "title": "Budget Allocation & Optimal Resource Utilization SOP",
+    "desc": "Institutional guidelines for departmental budget allocation and deficits.",
+    "status": "DONT_HAVE",
+    "action": "Prepare 2-page document outlining budget requisition and scrutiny cycle"
+  },
+  {
+    "id": "doc-642-1",
+    "metric": "6.4.2",
+    "weight": 7,
+    "type": "QnM",
+    "folder": "6.4 Financial Management/6.4.2 Grants",
+    "dept": "Finance / Accounts",
+    "title": "Sanction Letters for Non-Govt Grants / Philanthropy",
+    "desc": "Official sanction orders for funds received from non-govt sources.",
+    "status": "DONT_HAVE",
+    "action": "Collect letters for endowment funds, donations, NGO grants"
+  },
+  {
+    "id": "doc-642-2",
+    "metric": "6.4.2",
+    "weight": 7,
+    "type": "QnM",
+    "folder": "6.4 Financial Management/6.4.2 Grants",
+    "dept": "Finance",
+    "title": "Audited Statements Highlighting Grants Received",
+    "desc": "Chartered accountant certified balance sheets indicating non-govt funds.",
+    "status": "DONT_HAVE",
+    "action": "Highlight grant line-items in audited balance sheets for 5 years"
+  },
+  {
+    "id": "doc-642-3",
+    "metric": "6.4.2",
+    "weight": 7,
+    "type": "QnM",
+    "folder": "6.4 Financial Management/6.4.2 Grants",
+    "dept": "Finance",
+    "title": "Data Template 6.4.2 Completed",
+    "desc": "Standard NAAC excel template with funds in INR Lakhs.",
+    "status": "DONT_HAVE",
+    "action": "Fill template 6.4.2 (exclude research grants from Criterion III)"
+  },
+  {
+    "id": "doc-643-1",
+    "metric": "6.4.3",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.4 Financial Management/6.4.3 Financial Audit",
+    "dept": "Finance",
+    "title": "Policy Document on Internal & External Audit Mechanism",
+    "desc": "Institutional SOP defining frequency, audit scope, and CA appointment.",
+    "status": "DONT_HAVE",
+    "action": "Compile internal/external audit policy document"
+  },
+  {
+    "id": "doc-643-2",
+    "metric": "6.4.3",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.4 Financial Management/6.4.3 Financial Audit",
+    "dept": "Finance",
+    "title": "Full Financial Audit Reports for Last 5 Years",
+    "desc": "Audited Balance Sheets, Income & Expenditure accounts signed by CA.",
+    "status": "DONT_HAVE",
+    "action": "Ensure complete 5-year audited financial reports are scanned into folder"
+  },
+  {
+    "id": "doc-643-3",
+    "metric": "6.4.3",
+    "weight": 5,
+    "type": "QlM",
+    "folder": "6.4 Financial Management/6.4.3 Financial Audit",
+    "dept": "Finance",
+    "title": "Internal Audit Reports & Compliance Statements",
+    "desc": "Audit objection notes and action taken/compliance reports.",
+    "status": "DONT_HAVE",
+    "action": "Collate internal audit notes with rectification certificates"
+  },
+  {
+    "id": "doc-651-1",
+    "metric": "6.5.1",
+    "weight": 10,
+    "type": "QlM",
+    "folder": "6.5 IQAC/6.5.1 IQAC Mechanism",
+    "dept": "IQAC",
+    "title": "IQAC Constitution / Re-constitution Notifications",
+    "desc": "Official notification of IQAC members as per latest NAAC composition norms.",
+    "status": "DONT_HAVE",
+    "action": "Issue/retrieve latest IQAC composition circular with external experts"
+  },
+  {
+    "id": "doc-651-2",
+    "metric": "6.5.1",
+    "weight": 10,
+    "type": "QlM",
+    "folder": "6.5 IQAC/6.5.1 IQAC Mechanism",
+    "dept": "IQAC / Director",
+    "title": "Appointment Order of Full-time IQAC Director / Officer",
+    "desc": "Official appointment letter detailing duties and workload concession.",
+    "status": "DONT_HAVE",
+    "action": "Attach appointment letter of IQAC Coordinator/Director"
+  },
+  {
+    "id": "doc-651-3",
+    "metric": "6.5.1",
+    "weight": 10,
+    "type": "QlM",
+    "folder": "6.5 IQAC/6.5.1 IQAC Mechanism",
+    "dept": "IQAC",
+    "title": "Minutes of IQAC Meetings with Action Taken Reports (ATRs)",
+    "desc": "Minutes of minimum 4 meetings/year along with signed Action Taken.",
+    "status": "DONT_HAVE",
+    "action": "CRITICAL: Compile all IQAC minutes with explicit Action Taken columns"
+  },
+  {
+    "id": "doc-651-4",
+    "metric": "6.5.1",
+    "weight": 10,
+    "type": "QlM",
+    "folder": "6.5 IQAC/6.5.1 IQAC Mechanism",
+    "dept": "IQAC",
+    "title": "Submitted AQARs (Last 5 Years) & Submission Proof",
+    "desc": "Copies of submitted AQARs with NAAC portal acknowledgement.",
+    "status": "DONT_HAVE",
+    "action": "Download submitted AQAR copies and NAAC email acknowledgements"
+  },
+  {
+    "id": "doc-652-1",
+    "metric": "6.5.2",
+    "weight": 10,
+    "type": "QnM",
+    "folder": "6.5 IQAC/6.5.2 Quality Initiatives",
+    "dept": "IQAC",
+    "title": "Academic and Administrative Audit (AAA) Report & Follow-up",
+    "desc": "External peer team AAA report and institutional action taken.",
+    "status": "DONT_HAVE",
+    "action": "Scan external AAA audit report signed by external peer experts"
+  },
+  {
+    "id": "doc-652-2",
+    "metric": "6.5.2",
+    "weight": 10,
+    "type": "QnM",
+    "folder": "6.5 IQAC/6.5.2 Quality Initiatives",
+    "dept": "IQAC",
+    "title": "NIRF Participation Certificate / Score Card",
+    "desc": "Evidence of participation in NIRF ranking for assessed years.",
+    "status": "DONT_HAVE",
+    "action": "Download NIRF certificate / DCS submission proof"
+  },
+  {
+    "id": "doc-652-3",
+    "metric": "6.5.2",
+    "weight": 10,
+    "type": "QnM",
+    "folder": "6.5 IQAC/6.5.2 Quality Initiatives",
+    "dept": "IQAC",
+    "title": "External Quality Certifications (ISO/NABH/NABL/Green Audit)",
+    "desc": "Valid certification copies covering the assessment period.",
+    "status": "DONT_HAVE",
+    "action": "Gather valid ISO certificates, Green Audit, and Energy Audit reports"
+  },
+  {
+    "id": "doc-652-4",
+    "metric": "6.5.2",
+    "weight": 10,
+    "type": "QnM",
+    "folder": "6.5 IQAC/6.5.2 Quality Initiatives",
+    "dept": "IQAC",
+    "title": "Collaborative Quality Initiatives & MoUs Signed",
+    "desc": "MoUs with other institutions for student/faculty exchange and quality.",
+    "status": "DONT_HAVE",
+    "action": "Compile active MoUs highlighting quality enhancement activities"
+  },
+  {
+    "id": "doc-652-5",
+    "metric": "6.5.2",
+    "weight": 10,
+    "type": "QnM",
+    "folder": "6.5 IQAC/6.5.2 Quality Initiatives",
+    "dept": "IQAC",
+    "title": "Reports of Conferences/Seminars on Quality Conducted by IQAC",
+    "desc": "Detailed reports and photographs of quality enhancement workshops.",
+    "status": "DONT_HAVE",
+    "action": "Collect brochures and reports of quality seminars organized"
+  },
+  {
+    "id": "doc-652-6",
+    "metric": "6.5.2",
+    "weight": 10,
+    "type": "QnM",
+    "folder": "6.5 IQAC/6.5.2 Quality Initiatives",
+    "dept": "IQAC",
+    "title": "Data Template 6.5.2 Completed",
+    "desc": "Standard NAAC excel template for quality initiatives.",
+    "status": "DONT_HAVE",
+    "action": "Fill template 6.5.2 with valid certificate dates"
+  },
+  {
+    "id": "doc-653-1",
+    "metric": "6.5.3",
+    "weight": 10,
+    "type": "QlM",
+    "folder": "6.5 IQAC/6.5.3 Impact Analysis",
+    "dept": "IQAC",
+    "title": "Impact Analysis Report on Quality Initiatives (500 words)",
+    "desc": "Narrative detailing incremental improvements based on IQAC decisions.",
+    "status": "DONT_HAVE",
+    "action": "Draft 500-word qualitative impact analysis write-up"
+  },
+  {
+    "id": "doc-653-2",
+    "metric": "6.5.3",
+    "weight": 10,
+    "type": "QlM",
+    "folder": "6.5 IQAC/6.5.3 Impact Analysis",
+    "dept": "IQAC",
+    "title": "Data & Graphs on Measurable Quality Improvements",
+    "desc": "Comparative graphs showing pass rates, research papers, placements.",
+    "status": "DONT_HAVE",
+    "action": "Compile trend graphs showing 5-year growth across academic indicators"
+  },
+  {
+    "id": "doc-653-3",
+    "metric": "6.5.3",
+    "weight": 10,
+    "type": "QlM",
+    "folder": "6.5 IQAC/6.5.3 Impact Analysis",
+    "dept": "IQAC",
+    "title": "Stakeholder Feedback Analysis & Action Taken Documents",
+    "desc": "Student, teacher, employer feedback reports and resulting changes.",
+    "status": "DONT_HAVE",
+    "action": "Attach consolidated stakeholder feedback analysis and ATRs"
+  }
+];

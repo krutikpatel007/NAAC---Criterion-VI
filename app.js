@@ -3,19 +3,29 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'naac_tracker_data_v1';
+  const STORAGE_KEY = 'naac_tracker_data_v2';
+  const SUBMISSION_STORAGE_KEY = 'naac_submission_docs_v2';
   const THEME_KEY = 'naac_tracker_theme';
+
+  // 6 Academic Assessment Years (2020/21 to 2025-26)
+  const ACADEMIC_YEARS = ['2020-21', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
 
   // --- STATE ---
   let appData = {};
+  let submissionDocs = [];
   let currentCriterionKey = 'Criterion VI';
   let activeMetricId = '6.1.1';
-  let activeTab = 'folders'; // 'folders' | 'matrix' | 'analytics'
+  let activeTab = 'folders'; // 'folders' | 'submission' | 'matrix' | 'analytics'
   let matrixViewMode = 'cards'; // 'cards' | 'table'
   let searchQuery = '';
   let filterIndicator = 'ALL';
   let filterStatus = 'ALL';
   let filterType = 'ALL';
+
+  // Submission filters
+  let subFilterStatus = 'ALL'; // 'ALL' | 'DONT_HAVE' | 'HAVE'
+  let subFilterDept = 'ALL';
+  let subSearchQuery = '';
 
   // Chart instances
   let chartIndicator = null;
@@ -26,8 +36,9 @@
   function init() {
     initTheme();
     loadData();
+    loadSubmissionDocs();
     setupEventListeners();
-    renderAll();
+    switchTab('folders'); // Default to folders view and render properly
   }
 
   // --- THEME MANAGEMENT ---
@@ -43,7 +54,6 @@
   function toggleTheme() {
     const isDark = document.documentElement.classList.toggle('dark');
     localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
-    // Refresh charts on theme switch
     if (activeTab === 'analytics') {
       renderAnalytics();
     }
@@ -63,7 +73,18 @@
       appData = JSON.parse(JSON.stringify(window.DEFAULT_NAAC_DATA || {}));
     }
 
-    // Fallback if Criterion VI not present
+    // Ensure all metrics have 2020-21 through 2025-26
+    for (const cKey in appData) {
+      if (appData[cKey] && appData[cKey].metrics) {
+        appData[cKey].metrics.forEach(m => {
+          if (!m.years) m.years = {};
+          ACADEMIC_YEARS.forEach(yr => {
+            if (!m.years[yr]) m.years[yr] = 'Pending';
+          });
+        });
+      }
+    }
+
     if (!appData[currentCriterionKey]) {
       const keys = Object.keys(appData);
       if (keys.length > 0) currentCriterionKey = keys[0];
@@ -83,6 +104,28 @@
       showToast('Local storage limit exceeded or blocked.', 'error');
     }
     updateExecutiveKPIs();
+  }
+
+  function loadSubmissionDocs() {
+    const stored = localStorage.getItem(SUBMISSION_STORAGE_KEY);
+    if (stored) {
+      try {
+        submissionDocs = JSON.parse(stored);
+      } catch (e) {
+        submissionDocs = JSON.parse(JSON.stringify(window.CRITERION_VI_SPECIFIC_DOCS || []));
+      }
+    } else {
+      submissionDocs = JSON.parse(JSON.stringify(window.CRITERION_VI_SPECIFIC_DOCS || []));
+    }
+  }
+
+  function saveSubmissionDocs() {
+    try {
+      localStorage.setItem(SUBMISSION_STORAGE_KEY, JSON.stringify(submissionDocs));
+    } catch (e) {
+      console.error('Failed to save submission docs:', e);
+    }
+    updateSubmissionCounters();
   }
 
   function getActiveCriterion() {
@@ -113,17 +156,14 @@
       const weight = parseFloat(m.weightage) || 0;
       totalWeightage += weight;
 
-      // Status count
       if (m.status === 'Completed') completedCount++;
       else if (m.status === 'In Progress' || m.status === 'Under Review') inProgressCount++;
 
-      // Files count
       const filesCount = (m.evidenceFiles || []).length;
       totalFiles += filesCount;
 
-      // 5-Year status assessment calculation
       const years = m.years || {};
-      const yearVals = Object.values(years);
+      const yearVals = ACADEMIC_YEARS.map(yr => years[yr] || 'Pending');
       const availableYears = yearVals.filter(v => v === 'Available').length;
       const missingYears = yearVals.filter(v => v === 'Missing').length;
 
@@ -131,7 +171,6 @@
         gapsCount++;
       }
 
-      // Metric completion fraction
       const checklist = m.checklist || [];
       const checkedCount = checklist.filter(c => c.status === 'Available').length;
       const checklistRatio = checklist.length > 0 ? (checkedCount / checklist.length) : 0.5;
@@ -149,22 +188,44 @@
       ? Math.round((readinessWeightedScore / totalWeightage) * 100) 
       : 0;
 
-    // Update DOM
-    document.getElementById('stat-weightage').textContent = totalWeightage || 100;
-    document.getElementById('stat-readiness-percent').textContent = `${overallReadinessPercent}%`;
-    document.getElementById('stat-readiness-bar').style.width = `${overallReadinessPercent}%`;
-    
-    document.getElementById('stat-completed-count').textContent = completedCount;
-    document.getElementById('stat-inprogress-count').textContent = inProgressCount;
-    document.getElementById('stat-total-count').textContent = totalMetrics;
-    
-    document.getElementById('stat-files-count').textContent = `${totalFiles} Files`;
-    document.getElementById('stat-gaps-count').textContent = `${gapsCount} Items`;
+    const elWeightage = document.getElementById('stat-weightage');
+    const elReadinessPct = document.getElementById('stat-readiness-percent');
+    const elReadinessBar = document.getElementById('stat-readiness-bar');
+    const elCompleted = document.getElementById('stat-completed-count');
+    const elInProgress = document.getElementById('stat-inprogress-count');
+    const elTotalCount = document.getElementById('stat-total-count');
+    const elFiles = document.getElementById('stat-files-count');
+    const elGaps = document.getElementById('stat-gaps-count');
+    const elTreeCount = document.getElementById('tree-folders-count');
 
-    const treeCountElem = document.getElementById('tree-folders-count');
-    if (treeCountElem) {
-      treeCountElem.textContent = `${totalMetrics} Folders`;
-    }
+    if (elWeightage) elWeightage.textContent = totalWeightage || 100;
+    if (elReadinessPct) elReadinessPct.textContent = `${overallReadinessPercent}%`;
+    if (elReadinessBar) elReadinessBar.style.width = `${overallReadinessPercent}%`;
+    if (elCompleted) elCompleted.textContent = completedCount;
+    if (elInProgress) elInProgress.textContent = inProgressCount;
+    if (elTotalCount) elTotalCount.textContent = totalMetrics;
+    if (elFiles) elFiles.textContent = `${totalFiles} Files`;
+    if (elGaps) elGaps.textContent = `${gapsCount} Items`;
+    if (elTreeCount) elTreeCount.textContent = `${totalMetrics} Folders`;
+
+    updateSubmissionCounters();
+  }
+
+  function updateSubmissionCounters() {
+    const total = submissionDocs.length;
+    const haveCount = submissionDocs.filter(d => d.status === 'HAVE').length;
+    const dontHaveCount = total - haveCount;
+    const readiness = total > 0 ? Math.round((haveCount / total) * 100) : 0;
+
+    const elTotal = document.getElementById('sub-total-count');
+    const elHave = document.getElementById('sub-have-count');
+    const elDontHave = document.getElementById('sub-dont-have-count');
+    const elPercent = document.getElementById('sub-readiness-percent');
+
+    if (elTotal) elTotal.textContent = total;
+    if (elHave) elHave.textContent = haveCount;
+    if (elDontHave) elDontHave.textContent = dontHaveCount;
+    if (elPercent) elPercent.textContent = `${readiness}%`;
   }
 
   // --- RENDER DISPATCHER ---
@@ -173,6 +234,8 @@
     if (activeTab === 'folders') {
       renderFolderTree();
       renderFolderWorkspace();
+    } else if (activeTab === 'submission') {
+      renderSubmissionAudit();
     } else if (activeTab === 'matrix') {
       renderGapMatrix();
     } else if (activeTab === 'analytics') {
@@ -180,7 +243,7 @@
     }
   }
 
-  // --- VIEW 1: EVIDENCE REPOSITORY (TREE & WORKSPACE) ---
+  // --- VIEW 1: EVIDENCE REPOSITORY (FOLDER TREE & WORKSPACE) ---
   function renderFolderTree() {
     const container = document.getElementById('folder-tree-container');
     if (!container) return;
@@ -197,14 +260,13 @@
 
     let html = '';
     for (const [ki, items] of Object.entries(groups)) {
-      // Shorten Key Indicator title for tree header
       const shortKi = ki.replace(/Key Indicator\s*/i, '').trim();
 
       html += `
         <div class="mb-3">
           <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-2 py-1 flex items-center justify-between">
             <span class="truncate" title="${escapeHtml(shortKi)}">${escapeHtml(shortKi)}</span>
-            <span class="text-[10px] font-mono font-normal">(${items.length})</span>
+            <span class="text-[10px] font-mono font-normal">(${items.length} Folders)</span>
           </div>
           <div class="space-y-1 mt-1 pl-1">
       `;
@@ -212,17 +274,19 @@
       items.forEach(item => {
         const isActive = item.id === activeMetricId;
         const fileCount = (item.evidenceFiles || []).length;
-        const weight = item.weightage || '-';
         
         let statusDotColor = 'bg-slate-300 dark:bg-slate-600';
         if (item.status === 'Completed') statusDotColor = 'bg-emerald-500';
         else if (item.status === 'In Progress') statusDotColor = 'bg-amber-500';
         else if (item.status === 'Under Review') statusDotColor = 'bg-blue-500';
 
-        // Extract clean subfolder name
         const folderDisplayName = item.folder 
           ? item.folder.split('/').pop() 
           : `${item.metricNo} Evidence`;
+
+        // Check how many years are marked available
+        const my = item.years || {};
+        const haveYearsCount = ACADEMIC_YEARS.filter(yr => my[yr] === 'Available').length;
 
         html += `
           <button data-metric-id="${item.id}" class="folder-tree-item w-full text-left px-2.5 py-2 rounded-xl text-xs flex items-center justify-between transition group ${
@@ -236,6 +300,13 @@
               <span class="truncate">${escapeHtml(folderDisplayName)}</span>
             </div>
             <div class="flex items-center space-x-1.5 flex-shrink-0 ml-1">
+              <span class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                haveYearsCount === ACADEMIC_YEARS.length
+                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300'
+                  : haveYearsCount > 0
+                  ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300'
+                  : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+              }">${haveYearsCount}/6 Yrs</span>
               <span class="text-[10px] px-1.5 py-0.2 rounded font-mono ${
                 isActive ? 'bg-indigo-700/80 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               }">${fileCount}</span>
@@ -252,7 +323,6 @@
 
     container.innerHTML = html;
 
-    // Attach tree click handlers
     container.querySelectorAll('.folder-tree-item').forEach(btn => {
       btn.addEventListener('click', () => {
         activeMetricId = btn.getAttribute('data-metric-id');
@@ -268,7 +338,7 @@
 
     const metric = getActiveMetric();
     if (!metric) {
-      container.innerHTML = `<div class="p-8 text-center text-slate-400">Select a folder to view details</div>`;
+      container.innerHTML = `<div class="p-8 text-center text-slate-400">Select a folder from the hierarchy to view details</div>`;
       return;
     }
 
@@ -278,6 +348,7 @@
     const checklist = metric.checklist || [];
     const suggestedFiles = metric.suggestedFiles || [];
     const isQualitative = (metric.metricType || 'QlM') === 'QlM';
+    const my = metric.years || {};
 
     container.innerHTML = `
       <!-- Folder Header Card -->
@@ -309,7 +380,7 @@
 
           <!-- Status Selector -->
           <div class="flex items-center space-x-2">
-            <label class="text-xs font-medium text-slate-500">Status:</label>
+            <label class="text-xs font-medium text-slate-500">Overall Status:</label>
             <select id="select-active-status" class="text-xs font-semibold px-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500">
               <option value="Not Started" ${metric.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
               <option value="In Progress" ${metric.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
@@ -324,7 +395,7 @@
           ${escapeHtml(metric.indicator || '')}
         </p>
 
-        <!-- Windows Explorer Path Banner -->
+        <!-- Windows Explorer Main Folder Path -->
         <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-300 overflow-hidden">
           <div class="flex items-center space-x-2 truncate mr-2">
             <i class="fa-brands fa-windows text-indigo-500"></i>
@@ -332,19 +403,74 @@
           </div>
           <button id="btn-copy-folder-path" data-path="${escapeHtml(folderWindowsPath)}" class="px-2.5 py-1 bg-white dark:bg-slate-700 hover:bg-indigo-50 dark:hover:bg-slate-600 text-indigo-600 dark:text-indigo-300 rounded-lg text-xs font-sans font-semibold shadow-xs transition flex items-center space-x-1 flex-shrink-0">
             <i class="fa-regular fa-copy"></i>
-            <span>Copy Path</span>
+            <span>Copy Main Path</span>
           </button>
         </div>
       </div>
 
-      <!-- 5-Year Status Quick Buttons -->
-      <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">5-Year Assessment Compliance</span>
-          <span class="text-[11px] text-slate-400">Click any year to cycle status</span>
+      <!-- YEAR-WISE MARKING MATRIX (2020/21 TO 2025-26) -->
+      <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white flex items-center space-x-2">
+              <i class="fa-solid fa-calendar-check text-indigo-600"></i>
+              <span>Year-Wise Evidence Audit (2020/21 to 2025-26)</span>
+            </h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Click the button for each academic year to toggle between <strong>HAVE</strong> and <strong>DON'T HAVE</strong>.
+            </p>
+          </div>
+          <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+            ${ACADEMIC_YEARS.filter(yr => my[yr] === 'Available').length} / 6 Years Complete
+          </span>
         </div>
-        <div class="grid grid-cols-5 gap-2" id="years-pill-group">
-          ${renderYearPills(metric)}
+
+        <!-- 6-Year Interactive Table -->
+        <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-800">
+              <tr>
+                <th class="py-2.5 px-3">Academic Year</th>
+                <th class="py-2.5 px-3">Status</th>
+                <th class="py-2.5 px-3">Physical Local Folder on Machine</th>
+                <th class="py-2.5 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              ${ACADEMIC_YEARS.map(yr => {
+                const status = my[yr] || 'Pending';
+                const isHave = status === 'Available';
+                const yrPath = `${folderWindowsPath}\\${yr}`;
+
+                return `
+                  <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                    <td class="py-2.5 px-3 font-mono font-bold text-slate-900 dark:text-white flex items-center space-x-2">
+                      <span class="w-2.5 h-2.5 rounded-full ${isHave ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
+                      <span>${yr}</span>
+                    </td>
+                    <td class="py-2.5 px-3">
+                      <button data-yr-toggle="${yr}" class="btn-toggle-year-status px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs ${
+                        isHave
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300 hover:bg-emerald-200'
+                          : 'bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 hover:bg-rose-200'
+                      }">
+                        <i class="fa-solid ${isHave ? 'fa-circle-check text-emerald-600' : 'fa-circle-xmark text-rose-600'}"></i>
+                        <span>${isHave ? 'WE HAVE (AVAILABLE)' : 'WE DON\'T HAVE (GAP)'}</span>
+                      </button>
+                    </td>
+                    <td class="py-2.5 px-3 text-[11px] font-mono text-slate-500 dark:text-slate-400 truncate max-w-[280px]" title="${escapeHtml(yrPath)}">
+                      ${escapeHtml(yrPath)}
+                    </td>
+                    <td class="py-2.5 px-3 text-right">
+                      <button data-copy-yr-path="${escapeHtml(yrPath)}" class="btn-copy-yr-path px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 hover:text-indigo-600 text-slate-600 dark:text-slate-300 text-[11px] font-medium transition" title="Copy Year Subfolder Path">
+                        <i class="fa-regular fa-copy mr-1"></i> Copy Path
+                      </button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -373,7 +499,6 @@
           `}
         </div>
 
-        <!-- DVV Tip if available -->
         ${metric.dvvTip ? `
           <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-xs text-amber-900 dark:text-amber-200 flex items-start space-x-2.5">
             <i class="fa-solid fa-lightbulb text-amber-600 text-sm mt-0.5"></i>
@@ -434,7 +559,6 @@
           </button>
         </div>
 
-        <!-- Files List -->
         <div class="space-y-2">
           ${files.length > 0 ? files.map((file, idx) => `
             <div class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition">
@@ -445,7 +569,7 @@
                 <div class="truncate">
                   <div class="font-medium text-xs text-slate-900 dark:text-white truncate font-mono">${escapeHtml(file.name)}</div>
                   <div class="text-[11px] text-slate-400 flex items-center space-x-2 mt-0.5">
-                    <span>${escapeHtml(file.year || 'Consolidated')}</span>
+                    <span class="font-semibold text-indigo-600 dark:text-indigo-400">${escapeHtml(file.year || '2020-21')}</span>
                     <span>&bull;</span>
                     <span>${escapeHtml(file.notes || 'Verified evidence')}</span>
                   </div>
@@ -468,7 +592,7 @@
           `).join('') : `
             <div class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center text-slate-400">
               <i class="fa-solid fa-cloud-arrow-up text-3xl mb-2 text-slate-300 dark:text-slate-600"></i>
-              <p class="text-xs font-medium text-slate-600 dark:text-slate-300">No evidence documents logged yet in this folder</p>
+              <p class="text-xs font-medium text-slate-600 dark:text-slate-300">No individual documents logged yet in this folder</p>
               <p class="text-[11px] text-slate-400 mt-1">Copy files into your local directory: <code class="font-mono">${escapeHtml(folderWindowsPath)}</code>, then log them above.</p>
             </div>
           `}
@@ -478,7 +602,6 @@
     `;
 
     // Event listeners inside workspace
-    // Status change
     const statusSelect = document.getElementById('select-active-status');
     if (statusSelect) {
       statusSelect.addEventListener('change', (e) => {
@@ -489,7 +612,6 @@
       });
     }
 
-    // Copy folder path
     const btnCopyPath = document.getElementById('btn-copy-folder-path');
     if (btnCopyPath) {
       btnCopyPath.addEventListener('click', () => {
@@ -497,6 +619,29 @@
         copyToClipboard(path, 'Folder path copied to clipboard! Paste into Windows Explorer.');
       });
     }
+
+    // Toggle year status directly
+    container.querySelectorAll('.btn-toggle-year-status').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const yr = btn.getAttribute('data-yr-toggle');
+        if (!metric.years) metric.years = {};
+        const current = metric.years[yr];
+        // Toggle HAVE vs DON'T HAVE
+        metric.years[yr] = (current === 'Available') ? 'Missing' : 'Available';
+        saveData();
+        renderFolderWorkspace();
+        renderFolderTree();
+        showToast(`Year ${yr} marked as ${metric.years[yr] === 'Available' ? 'WE HAVE' : 'WE DON\'T HAVE'}`);
+      });
+    });
+
+    // Copy year subfolder path
+    container.querySelectorAll('.btn-copy-yr-path').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const path = btn.getAttribute('data-copy-yr-path');
+        copyToClipboard(path, 'Year subfolder path copied to clipboard!');
+      });
+    });
 
     // Checklist toggles
     container.querySelectorAll('.checklist-toggle').forEach(chk => {
@@ -517,7 +662,7 @@
         if (!metric.evidenceFiles) metric.evidenceFiles = [];
         metric.evidenceFiles.push({
           name: fileName,
-          year: 'Consolidated (5 Years)',
+          year: '2020-21',
           status: 'Ready for SSR',
           notes: 'Standard NAAC documentary proof'
         });
@@ -542,18 +687,6 @@
       });
     });
 
-    // Year pill clicks in workspace
-    container.querySelectorAll('.year-pill-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const yr = btn.getAttribute('data-year');
-        cycleYearStatus(metric, yr);
-        saveData();
-        renderFolderWorkspace();
-        renderFolderTree();
-      });
-    });
-
-    // Open add file modal
     const btnOpenFileModal = document.getElementById('btn-open-file-modal');
     if (btnOpenFileModal) {
       btnOpenFileModal.addEventListener('click', () => {
@@ -562,57 +695,13 @@
     }
   }
 
-  function renderYearPills(metric) {
-    const years = ['2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
-    const metricYears = metric.years || {};
-
-    return years.map(yr => {
-      const val = metricYears[yr] || 'Pending';
-      let bg = 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-300 dark:border-slate-700';
-      let icon = 'fa-regular fa-circle';
-
-      if (val === 'Available') {
-        bg = 'bg-emerald-50 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800';
-        icon = 'fa-solid fa-circle-check text-emerald-600';
-      } else if (val === 'Partial') {
-        bg = 'bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 border-amber-300 dark:border-amber-800';
-        icon = 'fa-solid fa-circle-half-stroke text-amber-500';
-      } else if (val === 'Missing') {
-        bg = 'bg-rose-50 text-rose-800 dark:bg-rose-950/50 dark:text-rose-300 border-rose-300 dark:border-rose-800';
-        icon = 'fa-solid fa-circle-xmark text-rose-500';
-      }
-
-      return `
-        <button data-year="${yr}" class="year-pill year-pill-btn p-2 rounded-xl border text-center transition flex flex-col items-center justify-center space-y-1 ${bg}">
-          <span class="text-[10px] font-mono font-bold">${yr}</span>
-          <i class="${icon} text-xs"></i>
-          <span class="text-[9px] font-semibold uppercase">${val}</span>
-        </button>
-      `;
-    }).join('');
-  }
-
-  function cycleYearStatus(metric, year) {
-    if (!metric.years) metric.years = {};
-    const current = metric.years[year] || 'Pending';
-    // Cycle: Pending -> Available -> Partial -> Missing -> Pending
-    let next = 'Available';
-    if (current === 'Pending') next = 'Available';
-    else if (current === 'Available') next = 'Partial';
-    else if (current === 'Partial') next = 'Missing';
-    else if (current === 'Missing') next = 'Pending';
-    
-    metric.years[year] = next;
-  }
-
-  // --- VIEW 2: GAP ANALYSIS & 5-YEAR MATRIX ---
+  // --- VIEW 2: GAP ANALYSIS & 6-YEAR MATRIX ---
   function renderGapMatrix() {
     const container = document.getElementById('matrix-items-container');
     if (!container) return;
 
     let metrics = getActiveMetrics();
 
-    // Filters
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       metrics = metrics.filter(m => 
@@ -658,7 +747,6 @@
 
   function renderMatrixCards(metrics) {
     return metrics.map(m => {
-      const years = ['2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
       const isQual = (m.metricType || 'QlM') === 'QlM';
 
       return `
@@ -697,24 +785,24 @@
             ${escapeHtml(m.indicator || '')}
           </p>
 
-          <!-- 5-Year Assessment Row -->
+          <!-- 6-Year Assessment Row (2020-21 to 2025-26) -->
           <div>
             <div class="text-[11px] font-bold uppercase text-slate-400 mb-1.5 flex items-center justify-between">
-              <span>5-Year Status Matrix (Click to toggle)</span>
+              <span>6-Year Compliance Matrix (2020/21 to 2025-26)</span>
               <span class="font-normal text-slate-400">${(m.evidenceFiles || []).length} Logged Files</span>
             </div>
-            <div class="grid grid-cols-5 gap-2">
-              ${years.map(yr => {
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              ${ACADEMIC_YEARS.map(yr => {
                 const val = (m.years || {})[yr] || 'Pending';
                 let bg = 'bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-400';
-                if (val === 'Available') bg = 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300';
+                if (val === 'Available') bg = 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold';
                 else if (val === 'Partial') bg = 'bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300';
-                else if (val === 'Missing') bg = 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300';
+                else if (val === 'Missing') bg = 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 font-bold';
 
                 return `
-                  <button data-m-id="${m.id}" data-year="${yr}" class="matrix-year-btn year-pill py-1.5 px-2 rounded-lg border text-center transition ${bg}">
+                  <button data-m-id="${m.id}" data-year="${yr}" class="matrix-year-btn year-pill py-2 px-1.5 rounded-lg border text-center transition ${bg}">
                     <div class="text-[10px] font-mono font-bold">${yr}</div>
-                    <div class="text-[9px] uppercase font-semibold">${val}</div>
+                    <div class="text-[9px] uppercase font-semibold mt-0.5">${val}</div>
                   </button>
                 `;
               }).join('')}
@@ -725,7 +813,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
             <div>
               <label class="block text-[11px] font-semibold text-slate-500 mb-1">Responsible Dept. / Office</label>
-              <input type="text" data-field="responsible" data-m-id="${m.id}" value="${escapeHtml(m.responsible || '')}" placeholder="e.g. IQAC, Registrar, HR" class="matrix-inline-input w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+              <input type="text" data-field="responsible" data-m-id="${m.id}" value="${escapeHtml(m.responsible || '')}" placeholder="e.g. SCSA - HOD, ADMIN, HR" class="matrix-inline-input w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
             </div>
 
             <div>
@@ -740,8 +828,6 @@
   }
 
   function renderMatrixTable(metrics) {
-    const years = ['2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
-
     return `
       <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
         <div class="overflow-x-auto">
@@ -750,10 +836,10 @@
               <tr>
                 <th class="py-3 px-3">Metric</th>
                 <th class="py-3 px-2">Weight</th>
-                <th class="py-3 px-3 min-w-[280px]">Indicator & Folder</th>
-                ${years.map(yr => `<th class="py-3 px-2 text-center">${yr}</th>`).join('')}
-                <th class="py-3 px-3 min-w-[140px]">Responsible</th>
-                <th class="py-3 px-3 min-w-[160px]">Action Plan</th>
+                <th class="py-3 px-3 min-w-[240px]">Indicator & Folder</th>
+                ${ACADEMIC_YEARS.map(yr => `<th class="py-3 px-2 text-center font-mono">${yr}</th>`).join('')}
+                <th class="py-3 px-3 min-w-[130px]">Responsible</th>
+                <th class="py-3 px-3 min-w-[150px]">Action Plan</th>
                 <th class="py-3 px-3">Status</th>
               </tr>
             </thead>
@@ -771,20 +857,20 @@
                     <div class="font-medium text-slate-800 dark:text-slate-200 leading-snug line-clamp-2" title="${escapeHtml(m.indicator || '')}">
                       ${escapeHtml(m.indicator || '')}
                     </div>
-                    <div class="text-[10px] text-slate-400 font-mono mt-0.5 truncate max-w-[260px]">
+                    <div class="text-[10px] text-slate-400 font-mono mt-0.5 truncate max-w-[240px]">
                       ${escapeHtml(m.folder || '')}
                     </div>
                   </td>
-                  ${years.map(yr => {
+                  ${ACADEMIC_YEARS.map(yr => {
                     const val = (m.years || {})[yr] || 'Pending';
                     let color = 'text-slate-400';
-                    if (val === 'Available') color = 'text-emerald-600 font-bold';
-                    else if (val === 'Partial') color = 'text-amber-500 font-semibold';
-                    else if (val === 'Missing') color = 'text-rose-600 font-bold';
+                    if (val === 'Available') color = 'text-emerald-600 font-bold bg-emerald-50 dark:bg-emerald-950/40';
+                    else if (val === 'Partial') color = 'text-amber-500 font-semibold bg-amber-50 dark:bg-amber-950/40';
+                    else if (val === 'Missing') color = 'text-rose-600 font-bold bg-rose-50 dark:bg-rose-950/40';
 
                     return `
                       <td class="py-2.5 px-1 text-center">
-                        <button data-m-id="${m.id}" data-year="${yr}" class="matrix-year-btn px-1.5 py-0.5 rounded text-[10px] uppercase font-mono hover:bg-slate-100 dark:hover:bg-slate-700 ${color}">
+                        <button data-m-id="${m.id}" data-year="${yr}" class="matrix-year-btn px-2 py-1 rounded text-[10px] uppercase font-mono transition ${color}">
                           ${val.slice(0, 4)}
                         </button>
                       </td>
@@ -814,7 +900,6 @@
   }
 
   function attachMatrixEventListeners(container) {
-    // Switch to folder view for specific metric
     container.querySelectorAll('[data-switch-folder]').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-switch-folder');
@@ -823,7 +908,6 @@
       });
     });
 
-    // Year buttons
     container.querySelectorAll('.matrix-year-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-m-id');
@@ -838,7 +922,6 @@
       });
     });
 
-    // Inline inputs (responsible, action plan)
     container.querySelectorAll('.matrix-inline-input').forEach(input => {
       input.addEventListener('change', (e) => {
         const id = e.target.getAttribute('data-m-id');
@@ -853,7 +936,6 @@
       });
     });
 
-    // Status selects
     container.querySelectorAll('.matrix-status-select').forEach(select => {
       select.addEventListener('change', (e) => {
         const id = e.target.getAttribute('data-metric-status-id');
@@ -869,6 +951,17 @@
     });
   }
 
+  function cycleYearStatus(metric, year) {
+    if (!metric.years) metric.years = {};
+    const current = metric.years[year] || 'Pending';
+    let next = 'Available';
+    if (current === 'Pending') next = 'Available';
+    else if (current === 'Available') next = 'Partial';
+    else if (current === 'Partial') next = 'Missing';
+    else if (current === 'Missing') next = 'Pending';
+    metric.years[year] = next;
+  }
+
   // --- VIEW 3: EXECUTIVE ANALYTICS ---
   function renderAnalytics() {
     renderHighWeightageTable();
@@ -880,7 +973,6 @@
     if (!tbody) return;
 
     const metrics = getActiveMetrics();
-    // Filter metrics with weightage >= 7
     const highWeight = metrics
       .filter(m => (parseFloat(m.weightage) || 0) >= 7)
       .sort((a, b) => (parseFloat(b.weightage) || 0) - (parseFloat(a.weightage) || 0));
@@ -925,7 +1017,6 @@
     // 1. Key Indicator Readiness
     const kiStats = {};
     metrics.forEach(m => {
-      // Group by prefix (e.g. 6.1, 6.2, etc.)
       const prefixMatch = m.metricNo.match(/^(\d+\.\d+)/);
       const prefix = prefixMatch ? prefixMatch[1] : (m.keyIndicator || 'Other');
       if (!kiStats[prefix]) {
@@ -1019,15 +1110,14 @@
       });
     }
 
-    // 3. 5-Year Compliance Trend
-    const years = ['2021-22', '2022-23', '2023-24', '2024-25', '2025-26'];
-    const availCounts = [0, 0, 0, 0, 0];
-    const partCounts = [0, 0, 0, 0, 0];
-    const missCounts = [0, 0, 0, 0, 0];
+    // 3. 6-Year Compliance Trend (2020-21 to 2025-26)
+    const availCounts = [0, 0, 0, 0, 0, 0];
+    const partCounts = [0, 0, 0, 0, 0, 0];
+    const missCounts = [0, 0, 0, 0, 0, 0];
 
     metrics.forEach(m => {
       const my = m.years || {};
-      years.forEach((yr, idx) => {
+      ACADEMIC_YEARS.forEach((yr, idx) => {
         const val = my[yr] || 'Pending';
         if (val === 'Available') availCounts[idx]++;
         else if (val === 'Partial') partCounts[idx]++;
@@ -1041,10 +1131,10 @@
       chartFiveYear = new Chart(ctxFive, {
         type: 'bar',
         data: {
-          labels: years,
+          labels: ACADEMIC_YEARS,
           datasets: [
             {
-              label: 'Available Evidence',
+              label: 'Available (We Have)',
               data: availCounts,
               backgroundColor: '#10b981',
               borderRadius: 6
@@ -1081,26 +1171,152 @@
     }
   }
 
+  // --- VIEW 4: URGENT SUBMISSION AUDIT: HAVE VS DON'T HAVE ---
+  function renderSubmissionAudit() {
+    updateSubmissionCounters();
+    const container = document.getElementById('submission-items-container');
+    if (!container) return;
+
+    let list = [...submissionDocs];
+
+    if (subFilterStatus !== 'ALL') {
+      list = list.filter(d => d.status === subFilterStatus);
+    }
+
+    if (subFilterDept !== 'ALL') {
+      list = list.filter(d => (d.dept || '').includes(subFilterDept));
+    }
+
+    if (subSearchQuery) {
+      const q = subSearchQuery.toLowerCase();
+      list = list.filter(d => 
+        d.title.toLowerCase().includes(q) ||
+        d.metric.toLowerCase().includes(q) ||
+        d.dept.toLowerCase().includes(q) ||
+        (d.desc || '').toLowerCase().includes(q) ||
+        (d.action || '').toLowerCase().includes(q)
+      );
+    }
+
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-850 p-10 text-center rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-400">
+          <i class="fa-solid fa-circle-check text-4xl text-emerald-500 mb-2"></i>
+          <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">No documents found matching the filter!</h3>
+          <p class="text-xs text-slate-500 mt-1">Try switching filters or search terms.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = list.map(doc => {
+      const isHave = doc.status === 'HAVE';
+      return `
+        <div class="bg-white dark:bg-slate-850 rounded-2xl border p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition ${
+          isHave
+            ? 'border-l-4 border-l-emerald-500 border-slate-200 dark:border-slate-800'
+            : 'border-l-4 border-l-rose-500 border-rose-200 dark:border-rose-900/60 bg-rose-50/20'
+        }">
+          <div class="flex-1 space-y-1.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                Metric ${escapeHtml(doc.metric)}
+              </span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+                ${escapeHtml(String(doc.weight))} Marks (${escapeHtml(doc.type)})
+              </span>
+              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                Dept: ${escapeHtml(doc.dept)}
+              </span>
+              <span class="text-[11px] text-slate-400 font-mono truncate max-w-[280px]">
+                <i class="fa-solid fa-folder text-amber-500 mr-1"></i>${escapeHtml(doc.folder)}
+              </span>
+            </div>
+
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+              ${escapeHtml(doc.title)}
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              ${escapeHtml(doc.desc)}
+            </p>
+
+            <div class="text-xs font-semibold ${isHave ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'} flex items-start space-x-1.5 pt-0.5">
+              <i class="fa-solid ${isHave ? 'fa-circle-check text-emerald-600' : 'fa-triangle-exclamation text-rose-600'} text-xs mt-0.5"></i>
+              <span><strong>Action for Tomorrow:</strong> ${escapeHtml(doc.action)}</span>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 flex-shrink-0 w-full sm:w-auto justify-end">
+            <button data-sub-doc-id="${doc.id}" class="btn-toggle-sub-status w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm ${
+              isHave 
+                ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
+                : 'bg-rose-600 hover:bg-rose-700 text-white ring-2 ring-rose-400/50'
+            }">
+              <i class="fa-solid ${isHave ? 'fa-circle-check text-sm' : 'fa-circle-xmark text-sm'}"></i>
+              <span>${isHave ? 'WE HAVE (READY)' : 'WE DON\'T HAVE (GAP)'}</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.btn-toggle-sub-status').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-sub-doc-id');
+        const doc = submissionDocs.find(d => d.id === id);
+        if (doc) {
+          doc.status = doc.status === 'HAVE' ? 'DONT_HAVE' : 'HAVE';
+          saveSubmissionDocs();
+          renderSubmissionAudit();
+          showToast(`Marked "${doc.title}" as ${doc.status === 'HAVE' ? 'WE HAVE' : 'WE DON\'T HAVE'}`);
+        }
+      });
+    });
+  }
+
   // --- TAB NAVIGATION ---
   function switchTab(tab) {
     activeTab = tab;
 
-    // Button states
-    document.querySelectorAll('.view-tab-btn').forEach(btn => {
-      btn.className = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800';
-    });
+    // Reset button states
+    const btnFolders = document.getElementById('tab-btn-folders');
+    const btnSubmission = document.getElementById('tab-btn-submission');
+    const btnMatrix = document.getElementById('tab-btn-matrix');
+    const btnAnalytics = document.getElementById('tab-btn-analytics');
 
-    const activeBtn = document.getElementById(`tab-btn-${tab}`);
-    if (activeBtn) {
-      activeBtn.className = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition bg-indigo-600 text-white shadow-sm';
+    const defaultBtnClass = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800';
+    if (btnFolders) btnFolders.className = defaultBtnClass;
+    if (btnSubmission) btnSubmission.className = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60';
+    if (btnMatrix) btnMatrix.className = defaultBtnClass;
+    if (btnAnalytics) btnAnalytics.className = defaultBtnClass;
+
+    // Active button highlight
+    if (tab === 'folders' && btnFolders) {
+      btnFolders.className = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition bg-indigo-600 text-white shadow-sm';
+    } else if (tab === 'submission' && btnSubmission) {
+      btnSubmission.className = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-bold transition bg-rose-600 text-white shadow-md shadow-rose-600/30 ring-2 ring-rose-400';
+    } else if (tab === 'matrix' && btnMatrix) {
+      btnMatrix.className = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition bg-indigo-600 text-white shadow-sm';
+    } else if (tab === 'analytics' && btnAnalytics) {
+      btnAnalytics.className = 'view-tab-btn flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-semibold transition bg-indigo-600 text-white shadow-sm';
     }
 
-    // Sections
-    document.getElementById('view-folders').classList.add('hidden');
-    document.getElementById('view-matrix').classList.add('hidden');
-    document.getElementById('view-analytics').classList.add('hidden');
+    // Hide all view sections
+    const secFolders = document.getElementById('view-folders');
+    const secSubmission = document.getElementById('view-submission');
+    const secMatrix = document.getElementById('view-matrix');
+    const secAnalytics = document.getElementById('view-analytics');
 
-    document.getElementById(`view-${tab}`).classList.remove('hidden');
+    if (secFolders) secFolders.classList.add('hidden');
+    if (secSubmission) secSubmission.classList.add('hidden');
+    if (secMatrix) secMatrix.classList.add('hidden');
+    if (secAnalytics) secAnalytics.classList.add('hidden');
+
+    // Show active section
+    const activeSec = document.getElementById(`view-${tab}`);
+    if (activeSec) {
+      activeSec.classList.remove('hidden');
+    }
 
     renderAll();
   }
@@ -1133,11 +1349,16 @@
     if (!metric.evidenceFiles) metric.evidenceFiles = [];
     metric.evidenceFiles.push({ name, year, status, notes });
 
+    // Also mark this year as Available
+    if (year && metric.years && metric.years[year] !== undefined) {
+      metric.years[year] = 'Available';
+    }
+
     saveData();
     closeAddFileModal();
     renderFolderWorkspace();
     renderFolderTree();
-    showToast(`Logged "${name}" to Metric ${metric.metricNo}`);
+    showToast(`Logged "${name}" to Metric ${metric.metricNo} (${year})`);
   }
 
   function openGithubModal() {
@@ -1162,7 +1383,10 @@
 
   // --- EXPORT & RESTORE ---
   function exportJson() {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+      criteria: appData,
+      submissionDocs: submissionDocs
+    }, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
     downloadAnchor.setAttribute("download", `NAAC_SSR_Tracker_Backup_${new Date().toISOString().slice(0,10)}.json`);
@@ -1179,8 +1403,14 @@
       try {
         const imported = JSON.parse(e.target.result);
         if (typeof imported === 'object' && imported !== null) {
-          appData = imported;
+          if (imported.criteria) {
+            appData = imported.criteria;
+            if (imported.submissionDocs) submissionDocs = imported.submissionDocs;
+          } else {
+            appData = imported;
+          }
           saveData();
+          saveSubmissionDocs();
           renderAll();
           closeBackupModal();
           showToast('Data restored successfully!');
@@ -1195,9 +1425,11 @@
   }
 
   function resetDefaultData() {
-    if (confirm('Are you sure you want to reset all data back to institutional default templates? Any unexported edits will be cleared.')) {
+    if (confirm('Reset all data back to institutional default templates? Any unexported edits will be cleared.')) {
       appData = JSON.parse(JSON.stringify(window.DEFAULT_NAAC_DATA || {}));
+      submissionDocs = JSON.parse(JSON.stringify(window.CRITERION_VI_SPECIFIC_DOCS || []));
       saveData();
+      saveSubmissionDocs();
       renderAll();
       closeBackupModal();
       showToast('Reset to default templates completed.');
@@ -1206,30 +1438,25 @@
 
   function exportExcel() {
     if (typeof XLSX === 'undefined') {
-      showToast('SheetJS library is loading, please try again in a moment.', 'warning');
+      showToast('SheetJS library is loading...', 'warning');
       return;
     }
 
     const wb = XLSX.utils.book_new();
-
-    // Export active criterion sheet
     const metrics = getActiveMetrics();
     const rows = [
-      ['Metric No.', 'Weightage', 'Metric / Indicator Description', 'Required Documents (SSR Manual)', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26', 'Responsible Dept', 'Action Plan', 'Status', 'Logged Evidence Count']
+      ['Metric No.', 'Weightage', 'Metric / Indicator Description', 'Required Documents (SSR Manual)', ...ACADEMIC_YEARS, 'Responsible Dept', 'Action Plan', 'Status', 'Logged Evidence Count']
     ];
 
     metrics.forEach(m => {
       const my = m.years || {};
+      const yrStatuses = ACADEMIC_YEARS.map(yr => my[yr] || 'Pending');
       rows.push([
         m.metricNo,
         m.weightage,
         m.indicator,
         m.docsRequiredRaw,
-        my['2021-22'] || 'Pending',
-        my['2022-23'] || 'Pending',
-        my['2023-24'] || 'Pending',
-        my['2024-25'] || 'Pending',
-        my['2025-26'] || 'Pending',
+        ...yrStatuses,
         m.responsible || '',
         m.actionPlan || '',
         m.status || 'Not Started',
@@ -1244,11 +1471,58 @@
     showToast('Updated Excel spreadsheet exported!');
   }
 
+  function exportSubmissionExcel() {
+    if (typeof XLSX === 'undefined') {
+      showToast('SheetJS is loading...', 'warning');
+      return;
+    }
+
+    const wb = XLSX.utils.book_new();
+
+    const dontHaveList = submissionDocs.filter(d => d.status !== 'HAVE');
+    const dontHaveRows = [
+      ['Metric', 'Weightage', 'Type', 'Specific Document Title', 'Responsible Dept', 'Target Folder', 'Immediate Action Required for Tomorrow']
+    ];
+    dontHaveList.forEach(d => {
+      dontHaveRows.push([
+        d.metric,
+        d.weight,
+        d.type,
+        d.title,
+        d.dept,
+        d.folder,
+        d.action
+      ]);
+    });
+    const wsGaps = XLSX.utils.aoa_to_sheet(dontHaveRows);
+    XLSX.utils.book_append_sheet(wb, wsGaps, 'DOCUMENTS_DONT_HAVE_GAPS');
+
+    const haveList = submissionDocs.filter(d => d.status === 'HAVE');
+    const haveRows = [
+      ['Metric', 'Weightage', 'Type', 'Specific Document Title', 'Responsible Dept', 'Target Folder', 'Status']
+    ];
+    haveList.forEach(d => {
+      haveRows.push([
+        d.metric,
+        d.weight,
+        d.type,
+        d.title,
+        d.dept,
+        d.folder,
+        'VERIFIED / AVAILABLE'
+      ]);
+    });
+    const wsHave = XLSX.utils.aoa_to_sheet(haveRows);
+    XLSX.utils.book_append_sheet(wb, wsHave, 'DOCUMENTS_WE_HAVE');
+
+    XLSX.writeFile(wb, `NAAC_Criterion_VI_Submission_Audit_${new Date().toISOString().slice(0,10)}.xlsx`);
+    showToast('Exported Submission Audit Spreadsheet with Have & Don\'t Have sheets!');
+  }
+
   function printReport() {
     const printDate = document.getElementById('print-date');
     if (printDate) printDate.textContent = new Date().toLocaleDateString('en-IN', { dateStyle: 'full' });
 
-    // Populate print table
     const metrics = getActiveMetrics();
     const printTbody = document.getElementById('print-tbody');
     if (printTbody) {
@@ -1262,11 +1536,7 @@
               <strong>${escapeHtml(m.indicator)}</strong>
               <div class="text-[10px] text-slate-500 font-mono">${escapeHtml(m.folder || '')}</div>
             </td>
-            <td class="p-1.5 border text-center">${my['2021-22'] || '-'}</td>
-            <td class="p-1.5 border text-center">${my['2022-23'] || '-'}</td>
-            <td class="p-1.5 border text-center">${my['2023-24'] || '-'}</td>
-            <td class="p-1.5 border text-center">${my['2024-25'] || '-'}</td>
-            <td class="p-1.5 border text-center">${my['2025-26'] || '-'}</td>
+            ${ACADEMIC_YEARS.map(yr => `<td class="p-1.5 border text-center font-mono">${my[yr] || '-'}</td>`).join('')}
             <td class="p-1.5 border">
               <div>Dept: ${escapeHtml(m.responsible || 'IQAC')}</div>
               <div>Plan: ${escapeHtml(m.actionPlan || '-')}</div>
@@ -1276,7 +1546,6 @@
       }).join('');
     }
 
-    // Stats for print
     const statReadiness = document.getElementById('stat-readiness-percent').textContent;
     const statCompleted = document.getElementById('stat-completed-count').textContent;
     const statInprogress = document.getElementById('stat-inprogress-count').textContent;
@@ -1292,11 +1561,9 @@
 
   // --- EVENT LISTENERS SETUP ---
   function setupEventListeners() {
-    // Theme toggle
     const themeBtn = document.getElementById('btn-theme-toggle');
     if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
 
-    // Criteria select
     const critSelect = document.getElementById('criteria-select');
     if (critSelect) {
       critSelect.addEventListener('change', (e) => {
@@ -1312,10 +1579,12 @@
 
     // Tabs
     const tabFolders = document.getElementById('tab-btn-folders');
+    const tabSubmission = document.getElementById('tab-btn-submission');
     const tabMatrix = document.getElementById('tab-btn-matrix');
     const tabAnalytics = document.getElementById('tab-btn-analytics');
 
     if (tabFolders) tabFolders.addEventListener('click', () => switchTab('folders'));
+    if (tabSubmission) tabSubmission.addEventListener('click', () => switchTab('submission'));
     if (tabMatrix) tabMatrix.addEventListener('click', () => switchTab('matrix'));
     if (tabAnalytics) tabAnalytics.addEventListener('click', () => switchTab('analytics'));
 
@@ -1327,7 +1596,7 @@
       });
     }
 
-    // Search and filters in Matrix
+    // Matrix search and filters
     const searchInput = document.getElementById('matrix-search');
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
@@ -1360,7 +1629,7 @@
       });
     }
 
-    // View mode in Matrix (Cards vs Table)
+    // View mode in Matrix
     const btnViewCards = document.getElementById('btn-view-cards');
     const btnViewTable = document.getElementById('btn-view-table');
 
@@ -1377,6 +1646,75 @@
         btnViewTable.className = 'px-2.5 py-1 text-xs rounded-lg font-medium transition bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-sm';
         btnViewCards.className = 'px-2.5 py-1 text-xs rounded-lg font-medium transition text-slate-600 dark:text-slate-400 hover:text-slate-900';
         renderGapMatrix();
+      });
+    }
+
+    // Submission view listeners
+    const btnExportSub = document.getElementById('btn-export-submission-excel');
+    if (btnExportSub) btnExportSub.addEventListener('click', exportSubmissionExcel);
+
+    const btnPrintSub = document.getElementById('btn-print-submission');
+    if (btnPrintSub) btnPrintSub.addEventListener('click', exportSubmissionExcel);
+
+    const subSearch = document.getElementById('sub-search');
+    if (subSearch) {
+      subSearch.addEventListener('input', (e) => {
+        subSearchQuery = e.target.value;
+        renderSubmissionAudit();
+      });
+    }
+
+    const subFilterD = document.getElementById('sub-filter-dept');
+    if (subFilterD) {
+      subFilterD.addEventListener('change', (e) => {
+        subFilterDept = e.target.value;
+        renderSubmissionAudit();
+      });
+    }
+
+    const btnFilterAll = document.getElementById('btn-sub-filter-all');
+    const btnFilterDontHave = document.getElementById('btn-sub-filter-dont-have');
+    const btnFilterHave = document.getElementById('btn-sub-filter-have');
+
+    if (btnFilterAll && btnFilterDontHave && btnFilterHave) {
+      btnFilterAll.addEventListener('click', () => {
+        subFilterStatus = 'ALL';
+        btnFilterAll.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-xs';
+        btnFilterDontHave.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition text-rose-600 dark:text-rose-400 hover:text-rose-800';
+        btnFilterHave.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition text-emerald-600 dark:text-emerald-400 hover:text-emerald-800';
+        renderSubmissionAudit();
+      });
+
+      btnFilterDontHave.addEventListener('click', () => {
+        subFilterStatus = 'DONT_HAVE';
+        btnFilterDontHave.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-rose-600 text-white shadow-xs';
+        btnFilterAll.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-400 hover:text-slate-800';
+        btnFilterHave.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition text-emerald-600 dark:text-emerald-400 hover:text-emerald-800';
+        renderSubmissionAudit();
+      });
+
+      btnFilterHave.addEventListener('click', () => {
+        subFilterStatus = 'HAVE';
+        btnFilterHave.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-bold transition bg-emerald-600 text-white shadow-xs';
+        btnFilterAll.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition text-slate-600 dark:text-slate-400 hover:text-slate-800';
+        btnFilterDontHave.className = 'sub-filter-btn px-3 py-1.5 rounded-lg text-xs font-semibold transition text-rose-600 dark:text-rose-400 hover:text-rose-800';
+        renderSubmissionAudit();
+      });
+    }
+
+    const btnMarkAll = document.getElementById('btn-sub-mark-all-have');
+    if (btnMarkAll) {
+      btnMarkAll.addEventListener('click', () => {
+        if (confirm('Mark currently filtered documents as WE HAVE?')) {
+          submissionDocs.forEach(d => {
+            if (subFilterDept === 'ALL' || (d.dept || '').includes(subFilterDept)) {
+              d.status = 'HAVE';
+            }
+          });
+          saveSubmissionDocs();
+          renderSubmissionAudit();
+          showToast('Updated status of filtered documents to WE HAVE');
+        }
       });
     }
 
@@ -1423,7 +1761,6 @@
     const btnPrintReport = document.getElementById('btn-print-report');
     if (btnPrintReport) btnPrintReport.addEventListener('click', printReport);
 
-    // Git commands copy
     const btnCopyGit = document.getElementById('btn-copy-git-cmd');
     if (btnCopyGit) {
       btnCopyGit.addEventListener('click', () => {
@@ -1483,12 +1820,10 @@
 
     container.appendChild(toast);
 
-    // Trigger animation
     setTimeout(() => {
       toast.classList.remove('translate-y-2', 'opacity-0');
     }, 10);
 
-    // Remove after 3.5s
     setTimeout(() => {
       toast.classList.add('opacity-0', 'translate-y-2');
       setTimeout(() => toast.remove(), 300);
@@ -1505,7 +1840,6 @@
       .replace(/'/g, '&#39;');
   }
 
-  // Auto-boot on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

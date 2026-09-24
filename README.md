@@ -1,6 +1,6 @@
 # NAAC Criterion VI - Evidence & Gap Analysis Tracker
 
-An interactive, responsive web application for Higher Education Institutions to track evidence documents, conduct 5-year gap analysis (2021-22 to 2025-26), and prepare for **NAAC SSR (Self Study Report) & DVV (Data Validation and Verification)** review under **Criterion VI: Governance, Leadership and Management (Total Weightage: 100)**.
+An interactive, responsive web application for Higher Education Institutions to track evidence documents, conduct 6-year gap analysis (2020-21 to 2025-26), and prepare for **NAAC SSR (Self Study Report) & DVV (Data Validation and Verification)** review under **Criterion VI: Governance, Leadership and Management (Total Weightage: 100)**.
 
 The web app is **100% client-side** (HTML5, Tailwind CSS, Vanilla JavaScript, Chart.js, SheetJS), works completely offline, and can be **hosted for free on GitHub Pages** in 2 minutes.
 
@@ -72,25 +72,33 @@ The tracker directly mirrors your local filesystem evidence repository folders c
 NAAC – Criterion VI/
 ├── 6.1 Vision & Leadership/
 │   ├── 6.1.1 Vision Mission/               [QlM - Weightage: 5]
+│   │   ├── 2020-21/ | 2021-22/ | 2022-23/ | 2023-24/ | 2024-25/ | 2025-26/
 │   └── 6.1.2 Decentralization/             [QlM - Weightage: 5]
+│       ├── 2020-21/ | 2021-22/ | 2022-23/ | 2023-24/ | 2024-25/ | 2025-26/
 ├── 6.2 Strategy & Deployment/
 │   ├── 6.2.1 Strategic Plan/               [QlM - Weightage: 5]
+│   │   ├── 2020-21/ | 2021-22/ | 2022-23/ | 2023-24/ | 2024-25/ | 2025-26/
 │   ├── 6.2.2 Institutional Bodies/         [QlM - Weightage: 5]
+│   │   ├── 2020-21/ | 2021-22/ | 2022-23/ | 2023-24/ | 2024-25/ | 2025-26/
 │   └── 6.2.3 E-Governance/                 [QnM - Weightage: 5]
+│       ├── 2020-21/ | 2021-22/ | 2022-23/ | 2023-24/ | 2024-25/ | 2025-26/
 ├── 6.3 Faculty & Staff Empowerment/
 │   ├── 6.3.1 Welfare/                      [QlM - Weightage: 5]
 │   ├── 6.3.2 Financial Support/            [QnM - Weightage: 5]
 │   ├── 6.3.3 Professional Development/     [QnM - Weightage: 5]
 │   ├── 6.3.4 FDP Participation/            [QnM - Weightage: 7]
 │   └── 6.3.5 Performance Appraisal/        [QlM - Weightage: 3]
+│       ├── (Each contains: 2020-21/ to 2025-26/)
 ├── 6.4 Financial Management/
 │   ├── 6.4.1 Resource Mobilization/        [QlM - Weightage: 8]
 │   ├── 6.4.2 Grants/                       [QnM - Weightage: 7]
 │   └── 6.4.3 Financial Audit/              [QlM - Weightage: 5]
+│       ├── (Each contains: 2020-21/ to 2025-26/)
 └── 6.5 IQAC/
     ├── 6.5.1 IQAC Mechanism/               [QlM - Weightage: 10]
     ├── 6.5.2 Quality Initiatives/          [QnM - Weightage: 10]
     └── 6.5.3 Impact Analysis/              [QlM - Weightage: 10]
+        ├── (Each contains: 2020-21/ to 2025-26/)
 ```
 
 ---
