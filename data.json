@@ -3520,7 +3520,9 @@
           "Institutional_Excellence_Achievement_Report.pdf",
           "Academic_Administrative_Governance_Manual.pdf"
         ],
-        "dvvTip": "Ensure Vision/Mission statements are prominently displayed on institutional website and approved in GC/BoM minutes."
+        "dvvTip": "Ensure Vision/Mission statements are prominently displayed on institutional website and approved in GC/BoM minutes.",
+        "scsaCollect": "Department activities aligned with Vision/Mission, departmental objectives, achievements",
+        "scsaSource": "SCSA Office / HOD"
       },
       {
         "id": "6.1.2",
@@ -3561,7 +3563,9 @@
           "Committee_Minutes_Empowerment_Evidence.pdf",
           "Operational_Autonomy_Delegation_Orders.pdf"
         ],
-        "dvvTip": "Provide at least one prominent successfully implemented case study showcasing participatory leadership."
+        "dvvTip": "Provide at least one prominent successfully implemented case study showcasing participatory leadership.",
+        "scsaCollect": "Department committees, delegated responsibilities, meetings, participation, decisions",
+        "scsaSource": "HOD / Coordinators"
       },
       {
         "id": "6.2.1",
@@ -3602,7 +3606,9 @@
           "Strategic_Plan_Deployment_Deliverables_Report.pdf",
           "Monitoring_and_Review_Committee_Minutes.pdf"
         ],
-        "dvvTip": "Strategic development plan should highlight 5-year goals, milestones achieved, and statutory approval."
+        "dvvTip": "Strategic development plan should highlight 5-year goals, milestones achieved, and statutory approval.",
+        "scsaCollect": "Department plans, academic targets, development plans, KPIs, implementation/review",
+        "scsaSource": "HOD / IQAC Coordinator"
       },
       {
         "id": "6.2.2",
@@ -3647,7 +3653,9 @@
           "Annual_Administrative_Report.pdf",
           "Minutes_of_Statutory_Bodies_Meetings.pdf"
         ],
-        "dvvTip": "Organogram must clearly portray hierarchical structure, statutory councils, and cell heads."
+        "dvvTip": "Organogram must clearly portray hierarchical structure, statutory councils, and cell heads.",
+        "scsaCollect": "Committee participation, departmental meetings, minutes, ATRs",
+        "scsaSource": "HOD / Committee Conveners"
       },
       {
         "id": "6.2.3",
@@ -3697,7 +3705,9 @@
           "Screenshots_Examination_Finance_Module.pdf",
           "Data_Template_6.2.3.xlsx"
         ],
-        "dvvTip": "Provide screen captures of user interfaces with institutional ERP/software URL and annual audit receipts."
+        "dvvTip": "Provide screen captures of user interfaces with institutional ERP/software URL and annual audit receipts.",
+        "scsaCollect": "ERP/LMS/e-governance usage by SCSA, screenshots/reports",
+        "scsaSource": "SCSA / IT"
       },
       {
         "id": "6.3.1",
@@ -3734,7 +3744,9 @@
           "Medical_Insurance_Provident_Fund_Receipts.pdf",
           "Staff_Recreation_Maternity_Leaves_Circulars.pdf"
         ],
-        "dvvTip": "Highlight statutory and non-statutory welfare initiatives provided to teaching and non-teaching personnel."
+        "dvvTip": "Highlight statutory and non-statutory welfare initiatives provided to teaching and non-teaching personnel.",
+        "scsaCollect": "Faculty/staff welfare beneficiaries and supporting documents",
+        "scsaSource": "HR + SCSA"
       },
       {
         "id": "6.3.2",
@@ -3780,7 +3792,9 @@
           "Audited_Statements_Highligting_Support.pdf",
           "Data_Template_6.3.2.xlsx"
         ],
-        "dvvTip": "E-copies of sanction letters signed by Finance Officer/Principal must accompany each claim in data template."
+        "dvvTip": "E-copies of sanction letters signed by Finance Officer/Principal must accompany each claim in data template.",
+        "scsaCollect": "Faculty conference/FDP/workshop financial support",
+        "scsaSource": "Faculty + Finance"
       },
       {
         "id": "6.3.3",
@@ -3826,7 +3840,9 @@
           "Participant_Attendance_Sheet_Signed.pdf",
           "Data_Template_6.3.3.xlsx"
         ],
-        "dvvTip": "Include brochure, list of resource persons, detailed geo-tagged event photos, and participant roll sheets."
+        "dvvTip": "Include brochure, list of resource persons, detailed geo-tagged event photos, and participant roll sheets.",
+        "scsaCollect": "FDP/workshops/seminars conducted by SCSA",
+        "scsaSource": "Faculty Coordinator"
       },
       {
         "id": "6.3.4",
@@ -3876,7 +3892,9 @@
           "Consolidated_List_of_Faculty_Attending.pdf",
           "Data_Template_6.3.4.xlsx"
         ],
-        "dvvTip": "Minimum duration of FDPs must adhere to NAAC norms (>= 5 consecutive days or UGC approved durations)."
+        "dvvTip": "Minimum duration of FDPs must adhere to NAAC norms (>= 5 consecutive days or UGC approved durations).",
+        "scsaCollect": "Every SCSA faculty member's FDP participation year-wise",
+        "scsaSource": "Each Faculty + HOD"
       },
       {
         "id": "6.3.5",
@@ -3913,7 +3931,9 @@
           "Confidential_Appraisal_Forms_NonTeaching.pdf",
           "Outcomes_and_Promotion_Incentive_Orders.pdf"
         ],
-        "dvvTip": "Document formal 360-degree appraisal mechanisms and resulting incentives, increments, or career advancement."
+        "dvvTip": "Document formal 360-degree appraisal mechanisms and resulting incentives, increments, or career advancement.",
+        "scsaCollect": "Faculty appraisal records, feedback, development actions",
+        "scsaSource": "HOD + HR"
       },
       {
         "id": "6.4.1",
@@ -3950,7 +3970,9 @@
           "Fund_Allocation_and_Utilization_Guidelines.pdf",
           "Deficit_Mitigation_Reserve_Fund_Extracts.pdf"
         ],
-        "dvvTip": "Show clearly articulated strategies for fee collection, philanthropic drives, corporate sponsorships, and asset management."
+        "dvvTip": "Show clearly articulated strategies for fee collection, philanthropic drives, corporate sponsorships, and asset management.",
+        "scsaCollect": "SCSA-generated/resource-mobilization activities where applicable",
+        "scsaSource": "HOD + Finance"
       },
       {
         "id": "6.4.2",
@@ -3988,7 +4010,9 @@
           "Endowment_Fund_Certificates.pdf",
           "Data_Template_6.4.2.xlsx"
         ],
-        "dvvTip": "Exclude research grants already claimed in Criterion III. Include chartered accountant counter-signed extracts."
+        "dvvTip": "Exclude research grants already claimed in Criterion III. Include chartered accountant counter-signed extracts.",
+        "scsaCollect": "Grants/projects received by SCSA faculty",
+        "scsaSource": "Research/Faculty"
       },
       {
         "id": "6.4.3",
@@ -4045,7 +4069,9 @@
           "Audit_Objections_and_Compliance_Reports.pdf",
           "Chartered_Accountant_Signoff_Certificates.pdf"
         ],
-        "dvvTip": "Provide evidence of regular audit cycles, external CA appointment letters, and audit compliance/rectification reports."
+        "dvvTip": "Provide evidence of regular audit cycles, external CA appointment letters, and audit compliance/rectification reports.",
+        "scsaCollect": "Department financial records supporting audits where applicable",
+        "scsaSource": "Finance"
       },
       {
         "id": "6.5.1",
@@ -4090,7 +4116,9 @@
           "Minutes_of_IQAC_Meetings_with_Action_Taken.pdf",
           "Annual_Quality_Assurance_Reports_AQAR.pdf"
         ],
-        "dvvTip": "Minutes of IQAC meetings must contain specific action-taken reports (ATR) for resolutions adopted."
+        "dvvTip": "Minutes of IQAC meetings must contain specific action-taken reports (ATR) for resolutions adopted.",
+        "scsaCollect": "SCSA participation in IQAC activities, IQAC compliance/action reports",
+        "scsaSource": "IQAC Coordinator"
       },
       {
         "id": "6.5.2",
@@ -4124,7 +4152,9 @@
           "Quality_Workshops_Conferences_Reports.pdf",
           "Data_Template_6.5.2.xlsx"
         ],
-        "dvvTip": "Valid external quality audit certificates (ISO, NIRF ranking participation, Green Audit) must cover the assessment period."
+        "dvvTip": "Valid external quality audit certificates (ISO, NIRF ranking participation, Green Audit) must cover the assessment period.",
+        "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+        "scsaSource": "SCSA + IQAC"
       },
       {
         "id": "6.5.3",
@@ -4169,7 +4199,9 @@
           "Accreditation_Rankings_Timeline_Analysis.pdf",
           "Stakeholder_Feedback_Action_Impact_Doc.pdf"
         ],
-        "dvvTip": "Highlight measurable post-accreditation quality enhancements in academic output, student pass rates, and research citations."
+        "dvvTip": "Highlight measurable post-accreditation quality enhancements in academic output, student pass rates, and research citations.",
+        "scsaCollect": "Impact of SCSA quality initiatives with before/after evidence",
+        "scsaSource": "HOD + IQAC"
       }
     ]
   },

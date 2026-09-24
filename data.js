@@ -3521,7 +3521,9 @@ window.DEFAULT_NAAC_DATA = {
           "Institutional_Excellence_Achievement_Report.pdf",
           "Academic_Administrative_Governance_Manual.pdf"
         ],
-        "dvvTip": "Ensure Vision/Mission statements are prominently displayed on institutional website and approved in GC/BoM minutes."
+        "dvvTip": "Ensure Vision/Mission statements are prominently displayed on institutional website and approved in GC/BoM minutes.",
+        "scsaCollect": "Department activities aligned with Vision/Mission, departmental objectives, achievements",
+        "scsaSource": "SCSA Office / HOD"
       },
       {
         "id": "6.1.2",
@@ -3562,7 +3564,9 @@ window.DEFAULT_NAAC_DATA = {
           "Committee_Minutes_Empowerment_Evidence.pdf",
           "Operational_Autonomy_Delegation_Orders.pdf"
         ],
-        "dvvTip": "Provide at least one prominent successfully implemented case study showcasing participatory leadership."
+        "dvvTip": "Provide at least one prominent successfully implemented case study showcasing participatory leadership.",
+        "scsaCollect": "Department committees, delegated responsibilities, meetings, participation, decisions",
+        "scsaSource": "HOD / Coordinators"
       },
       {
         "id": "6.2.1",
@@ -3603,7 +3607,9 @@ window.DEFAULT_NAAC_DATA = {
           "Strategic_Plan_Deployment_Deliverables_Report.pdf",
           "Monitoring_and_Review_Committee_Minutes.pdf"
         ],
-        "dvvTip": "Strategic development plan should highlight 5-year goals, milestones achieved, and statutory approval."
+        "dvvTip": "Strategic development plan should highlight 5-year goals, milestones achieved, and statutory approval.",
+        "scsaCollect": "Department plans, academic targets, development plans, KPIs, implementation/review",
+        "scsaSource": "HOD / IQAC Coordinator"
       },
       {
         "id": "6.2.2",
@@ -3648,7 +3654,9 @@ window.DEFAULT_NAAC_DATA = {
           "Annual_Administrative_Report.pdf",
           "Minutes_of_Statutory_Bodies_Meetings.pdf"
         ],
-        "dvvTip": "Organogram must clearly portray hierarchical structure, statutory councils, and cell heads."
+        "dvvTip": "Organogram must clearly portray hierarchical structure, statutory councils, and cell heads.",
+        "scsaCollect": "Committee participation, departmental meetings, minutes, ATRs",
+        "scsaSource": "HOD / Committee Conveners"
       },
       {
         "id": "6.2.3",
@@ -3698,7 +3706,9 @@ window.DEFAULT_NAAC_DATA = {
           "Screenshots_Examination_Finance_Module.pdf",
           "Data_Template_6.2.3.xlsx"
         ],
-        "dvvTip": "Provide screen captures of user interfaces with institutional ERP/software URL and annual audit receipts."
+        "dvvTip": "Provide screen captures of user interfaces with institutional ERP/software URL and annual audit receipts.",
+        "scsaCollect": "ERP/LMS/e-governance usage by SCSA, screenshots/reports",
+        "scsaSource": "SCSA / IT"
       },
       {
         "id": "6.3.1",
@@ -3735,7 +3745,9 @@ window.DEFAULT_NAAC_DATA = {
           "Medical_Insurance_Provident_Fund_Receipts.pdf",
           "Staff_Recreation_Maternity_Leaves_Circulars.pdf"
         ],
-        "dvvTip": "Highlight statutory and non-statutory welfare initiatives provided to teaching and non-teaching personnel."
+        "dvvTip": "Highlight statutory and non-statutory welfare initiatives provided to teaching and non-teaching personnel.",
+        "scsaCollect": "Faculty/staff welfare beneficiaries and supporting documents",
+        "scsaSource": "HR + SCSA"
       },
       {
         "id": "6.3.2",
@@ -3781,7 +3793,9 @@ window.DEFAULT_NAAC_DATA = {
           "Audited_Statements_Highligting_Support.pdf",
           "Data_Template_6.3.2.xlsx"
         ],
-        "dvvTip": "E-copies of sanction letters signed by Finance Officer/Principal must accompany each claim in data template."
+        "dvvTip": "E-copies of sanction letters signed by Finance Officer/Principal must accompany each claim in data template.",
+        "scsaCollect": "Faculty conference/FDP/workshop financial support",
+        "scsaSource": "Faculty + Finance"
       },
       {
         "id": "6.3.3",
@@ -3827,7 +3841,9 @@ window.DEFAULT_NAAC_DATA = {
           "Participant_Attendance_Sheet_Signed.pdf",
           "Data_Template_6.3.3.xlsx"
         ],
-        "dvvTip": "Include brochure, list of resource persons, detailed geo-tagged event photos, and participant roll sheets."
+        "dvvTip": "Include brochure, list of resource persons, detailed geo-tagged event photos, and participant roll sheets.",
+        "scsaCollect": "FDP/workshops/seminars conducted by SCSA",
+        "scsaSource": "Faculty Coordinator"
       },
       {
         "id": "6.3.4",
@@ -3877,7 +3893,9 @@ window.DEFAULT_NAAC_DATA = {
           "Consolidated_List_of_Faculty_Attending.pdf",
           "Data_Template_6.3.4.xlsx"
         ],
-        "dvvTip": "Minimum duration of FDPs must adhere to NAAC norms (>= 5 consecutive days or UGC approved durations)."
+        "dvvTip": "Minimum duration of FDPs must adhere to NAAC norms (>= 5 consecutive days or UGC approved durations).",
+        "scsaCollect": "Every SCSA faculty member's FDP participation year-wise",
+        "scsaSource": "Each Faculty + HOD"
       },
       {
         "id": "6.3.5",
@@ -3914,7 +3932,9 @@ window.DEFAULT_NAAC_DATA = {
           "Confidential_Appraisal_Forms_NonTeaching.pdf",
           "Outcomes_and_Promotion_Incentive_Orders.pdf"
         ],
-        "dvvTip": "Document formal 360-degree appraisal mechanisms and resulting incentives, increments, or career advancement."
+        "dvvTip": "Document formal 360-degree appraisal mechanisms and resulting incentives, increments, or career advancement.",
+        "scsaCollect": "Faculty appraisal records, feedback, development actions",
+        "scsaSource": "HOD + HR"
       },
       {
         "id": "6.4.1",
@@ -3951,7 +3971,9 @@ window.DEFAULT_NAAC_DATA = {
           "Fund_Allocation_and_Utilization_Guidelines.pdf",
           "Deficit_Mitigation_Reserve_Fund_Extracts.pdf"
         ],
-        "dvvTip": "Show clearly articulated strategies for fee collection, philanthropic drives, corporate sponsorships, and asset management."
+        "dvvTip": "Show clearly articulated strategies for fee collection, philanthropic drives, corporate sponsorships, and asset management.",
+        "scsaCollect": "SCSA-generated/resource-mobilization activities where applicable",
+        "scsaSource": "HOD + Finance"
       },
       {
         "id": "6.4.2",
@@ -3989,7 +4011,9 @@ window.DEFAULT_NAAC_DATA = {
           "Endowment_Fund_Certificates.pdf",
           "Data_Template_6.4.2.xlsx"
         ],
-        "dvvTip": "Exclude research grants already claimed in Criterion III. Include chartered accountant counter-signed extracts."
+        "dvvTip": "Exclude research grants already claimed in Criterion III. Include chartered accountant counter-signed extracts.",
+        "scsaCollect": "Grants/projects received by SCSA faculty",
+        "scsaSource": "Research/Faculty"
       },
       {
         "id": "6.4.3",
@@ -4046,7 +4070,9 @@ window.DEFAULT_NAAC_DATA = {
           "Audit_Objections_and_Compliance_Reports.pdf",
           "Chartered_Accountant_Signoff_Certificates.pdf"
         ],
-        "dvvTip": "Provide evidence of regular audit cycles, external CA appointment letters, and audit compliance/rectification reports."
+        "dvvTip": "Provide evidence of regular audit cycles, external CA appointment letters, and audit compliance/rectification reports.",
+        "scsaCollect": "Department financial records supporting audits where applicable",
+        "scsaSource": "Finance"
       },
       {
         "id": "6.5.1",
@@ -4091,7 +4117,9 @@ window.DEFAULT_NAAC_DATA = {
           "Minutes_of_IQAC_Meetings_with_Action_Taken.pdf",
           "Annual_Quality_Assurance_Reports_AQAR.pdf"
         ],
-        "dvvTip": "Minutes of IQAC meetings must contain specific action-taken reports (ATR) for resolutions adopted."
+        "dvvTip": "Minutes of IQAC meetings must contain specific action-taken reports (ATR) for resolutions adopted.",
+        "scsaCollect": "SCSA participation in IQAC activities, IQAC compliance/action reports",
+        "scsaSource": "IQAC Coordinator"
       },
       {
         "id": "6.5.2",
@@ -4125,7 +4153,9 @@ window.DEFAULT_NAAC_DATA = {
           "Quality_Workshops_Conferences_Reports.pdf",
           "Data_Template_6.5.2.xlsx"
         ],
-        "dvvTip": "Valid external quality audit certificates (ISO, NIRF ranking participation, Green Audit) must cover the assessment period."
+        "dvvTip": "Valid external quality audit certificates (ISO, NIRF ranking participation, Green Audit) must cover the assessment period.",
+        "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+        "scsaSource": "SCSA + IQAC"
       },
       {
         "id": "6.5.3",
@@ -4170,7 +4200,9 @@ window.DEFAULT_NAAC_DATA = {
           "Accreditation_Rankings_Timeline_Analysis.pdf",
           "Stakeholder_Feedback_Action_Impact_Doc.pdf"
         ],
-        "dvvTip": "Highlight measurable post-accreditation quality enhancements in academic output, student pass rates, and research citations."
+        "dvvTip": "Highlight measurable post-accreditation quality enhancements in academic output, student pass rates, and research citations.",
+        "scsaCollect": "Impact of SCSA quality initiatives with before/after evidence",
+        "scsaSource": "HOD + IQAC"
       }
     ]
   },
@@ -4599,7 +4631,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Approved Vision and Mission Statement Document",
     "desc": "Official institutional Vision & Mission document as approved by statutory body.",
     "status": "DONT_HAVE",
-    "action": "Extract from Institute calendar or official website; get Registrar stamp"
+    "action": "Extract from Institute calendar or official website; get Registrar stamp",
+    "scsaCollect": "Department activities aligned with Vision/Mission, departmental objectives, achievements",
+    "scsaSource": "SCSA Office / HOD"
   },
   {
     "id": "doc-611-2",
@@ -4611,7 +4645,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Minutes of Governing Body/Syndicate adopting Vision & Mission",
     "desc": "Extract of GC/BoM resolution approving Vision & Mission statement.",
     "status": "DONT_HAVE",
-    "action": "Request GC meeting minutes extract from Director/Registrar office"
+    "action": "Request GC meeting minutes extract from Director/Registrar office",
+    "scsaCollect": "Department activities aligned with Vision/Mission, departmental objectives, achievements",
+    "scsaSource": "SCSA Office / HOD"
   },
   {
     "id": "doc-611-3",
@@ -4623,7 +4659,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Report of Institutional Achievements led to Excellence",
     "desc": "Summary report of key academic and administrative excellence achievements.",
     "status": "DONT_HAVE",
-    "action": "Compile 3-page summary of accreditations, awards, student ranks"
+    "action": "Compile 3-page summary of accreditations, awards, student ranks",
+    "scsaCollect": "Department activities aligned with Vision/Mission, departmental objectives, achievements",
+    "scsaSource": "SCSA Office / HOD"
   },
   {
     "id": "doc-611-4",
@@ -4635,7 +4673,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Website Screenshot of Vision & Mission Web Links",
     "desc": "Live website screenshots showing display in entrance/departments.",
     "status": "DONT_HAVE",
-    "action": "Take geo-tagged photos and website screenshots"
+    "action": "Take geo-tagged photos and website screenshots",
+    "scsaCollect": "Department activities aligned with Vision/Mission, departmental objectives, achievements",
+    "scsaSource": "SCSA Office / HOD"
   },
   {
     "id": "doc-612-1",
@@ -4647,7 +4687,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Decentralization Case Study Document (<= 500 words)",
     "desc": "Formal write-up detailing operational autonomy given to departments/committees.",
     "status": "DONT_HAVE",
-    "action": "Write 500 words case study on exam decentralization or budget devolution"
+    "action": "Write 500 words case study on exam decentralization or budget devolution",
+    "scsaCollect": "Department committees, delegated responsibilities, meetings, participation, decisions",
+    "scsaSource": "HOD / Coordinators"
   },
   {
     "id": "doc-612-2",
@@ -4659,7 +4701,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Office Orders Delegating Powers to HODs/Committees",
     "desc": "Sanction orders showing administrative & financial authority delegation.",
     "status": "DONT_HAVE",
-    "action": "Collect circulars issued to HODs delegating expenditure/leave approvals"
+    "action": "Collect circulars issued to HODs delegating expenditure/leave approvals",
+    "scsaCollect": "Department committees, delegated responsibilities, meetings, participation, decisions",
+    "scsaSource": "HOD / Coordinators"
   },
   {
     "id": "doc-612-3",
@@ -4671,7 +4715,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Sample Minutes of Department/Participative Committees",
     "desc": "Minutes showing active faculty & staff involvement in decision making.",
     "status": "DONT_HAVE",
-    "action": "Attach minutes of 3 departmental/advisory meetings with attendance"
+    "action": "Attach minutes of 3 departmental/advisory meetings with attendance",
+    "scsaCollect": "Department committees, delegated responsibilities, meetings, participation, decisions",
+    "scsaSource": "HOD / Coordinators"
   },
   {
     "id": "doc-621-1",
@@ -4683,7 +4729,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Institutional Strategic / Perspective Plan Document",
     "desc": "Published 5-year perspective strategic plan document.",
     "status": "DONT_HAVE",
-    "action": "Obtain published Strategic Plan 2021-2026 PDF"
+    "action": "Obtain published Strategic Plan 2021-2026 PDF",
+    "scsaCollect": "Department plans, academic targets, development plans, KPIs, implementation/review",
+    "scsaSource": "HOD / IQAC Coordinator"
   },
   {
     "id": "doc-621-2",
@@ -4695,7 +4743,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Governing Council Minutes on Strategic Plan Adoption",
     "desc": "Resolution copy adopting the strategic development deliverables.",
     "status": "DONT_HAVE",
-    "action": "Extract GC resolution signed by Chairman/Member Secretary"
+    "action": "Extract GC resolution signed by Chairman/Member Secretary",
+    "scsaCollect": "Department plans, academic targets, development plans, KPIs, implementation/review",
+    "scsaSource": "HOD / IQAC Coordinator"
   },
   {
     "id": "doc-621-3",
@@ -4707,7 +4757,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Strategic Plan Deployment & Monitoring Report",
     "desc": "Annual progress report on deliverables, targets achieved vs planned.",
     "status": "DONT_HAVE",
-    "action": "Prepare tabular checklist of targets met (lab additions, courses, etc.)"
+    "action": "Prepare tabular checklist of targets met (lab additions, courses, etc.)",
+    "scsaCollect": "Department plans, academic targets, development plans, KPIs, implementation/review",
+    "scsaSource": "HOD / IQAC Coordinator"
   },
   {
     "id": "doc-622-1",
@@ -4719,7 +4771,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Approved Institutional Organogram",
     "desc": "Official organizational hierarchy chart approved by management.",
     "status": "DONT_HAVE",
-    "action": "Export high-res organogram with Dean, HOD, and Cell linkages"
+    "action": "Export high-res organogram with Dean, HOD, and Cell linkages",
+    "scsaCollect": "Committee participation, departmental meetings, minutes, ATRs",
+    "scsaSource": "HOD / Committee Conveners"
   },
   {
     "id": "doc-622-2",
@@ -4731,7 +4785,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Service Rules, Appointment & Promotion Policy Manual",
     "desc": "Staff hand book detailing HR policies, leave rules, and code of conduct.",
     "status": "DONT_HAVE",
-    "action": "Gather approved HR Service Manual PDF"
+    "action": "Gather approved HR Service Manual PDF",
+    "scsaCollect": "Committee participation, departmental meetings, minutes, ATRs",
+    "scsaSource": "HOD / Committee Conveners"
   },
   {
     "id": "doc-622-3",
@@ -4743,7 +4799,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Annual Administrative Reports (Last 5 Years)",
     "desc": "Consolidated annual reports of the institution from 2021-22 to 2025-26.",
     "status": "DONT_HAVE",
-    "action": "Collect PDF copies of Annual Reports for each assessed year"
+    "action": "Collect PDF copies of Annual Reports for each assessed year",
+    "scsaCollect": "Committee participation, departmental meetings, minutes, ATRs",
+    "scsaSource": "HOD / Committee Conveners"
   },
   {
     "id": "doc-622-4",
@@ -4755,7 +4813,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Minutes of Statutory Bodies & Committees",
     "desc": "Minutes of Governing Body, Academic Council, and grievance redressal.",
     "status": "DONT_HAVE",
-    "action": "Compile signed meeting minutes extracts with sign-offs"
+    "action": "Compile signed meeting minutes extracts with sign-offs",
+    "scsaCollect": "Committee participation, departmental meetings, minutes, ATRs",
+    "scsaSource": "HOD / Committee Conveners"
   },
   {
     "id": "doc-623-1",
@@ -4767,7 +4827,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Institutional Budget Statements for E-Governance",
     "desc": "Audited accounts highlighting expenditure on ERP, hardware, software.",
     "status": "DONT_HAVE",
-    "action": "Get Finance Officer certified budget extracts for software/ERP"
+    "action": "Get Finance Officer certified budget extracts for software/ERP",
+    "scsaCollect": "ERP/LMS/e-governance usage by SCSA, screenshots/reports",
+    "scsaSource": "SCSA / IT"
   },
   {
     "id": "doc-623-2",
@@ -4779,7 +4841,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "ERP Implementation Vendor Agreement & Invoices",
     "desc": "Valid AMC contracts, license agreements, and purchase invoices.",
     "status": "DONT_HAVE",
-    "action": "Scan ERP vendor purchase orders, AMC agreements, and paid bills"
+    "action": "Scan ERP vendor purchase orders, AMC agreements, and paid bills",
+    "scsaCollect": "ERP/LMS/e-governance usage by SCSA, screenshots/reports",
+    "scsaSource": "SCSA / IT"
   },
   {
     "id": "doc-623-3",
@@ -4791,7 +4855,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "ERP Screenshots of User Interfaces (All 5 Areas)",
     "desc": "Full page screen captures showing URL, institutional logo, user login.",
     "status": "DONT_HAVE",
-    "action": "Take screenshots of: (1) Admin, (2) Finance, (3) Admission, (4) Exam, (5) Planning"
+    "action": "Take screenshots of: (1) Admin, (2) Finance, (3) Admission, (4) Exam, (5) Planning",
+    "scsaCollect": "ERP/LMS/e-governance usage by SCSA, screenshots/reports",
+    "scsaSource": "SCSA / IT"
   },
   {
     "id": "doc-623-4",
@@ -4803,7 +4869,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Data Template 6.2.3 for E-Governance",
     "desc": "Standard NAAC excel template completed and verified.",
     "status": "DONT_HAVE",
-    "action": "Fill NAAC template 6.2.3 with software names and deployment years"
+    "action": "Fill NAAC template 6.2.3 with software names and deployment years",
+    "scsaCollect": "ERP/LMS/e-governance usage by SCSA, screenshots/reports",
+    "scsaSource": "SCSA / IT"
   },
   {
     "id": "doc-631-1",
@@ -4815,7 +4883,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Policy Document on Staff Welfare Measures",
     "desc": "Governing body approved policy on statutory & non-statutory benefits.",
     "status": "DONT_HAVE",
-    "action": "Compile welfare policy booklet signed by Registrar"
+    "action": "Compile welfare policy booklet signed by Registrar",
+    "scsaCollect": "Faculty/staff welfare beneficiaries and supporting documents",
+    "scsaSource": "HR + SCSA"
   },
   {
     "id": "doc-631-2",
@@ -4827,7 +4897,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Consolidated List of Beneficiaries (Teaching & Non-Teaching)",
     "desc": "Year-wise beneficiary lists for PF, ESI, gratuity, medical allowance, etc.",
     "status": "DONT_HAVE",
-    "action": "Get HR/Accounts list of employees covered under PF/insurance"
+    "action": "Get HR/Accounts list of employees covered under PF/insurance",
+    "scsaCollect": "Faculty/staff welfare beneficiaries and supporting documents",
+    "scsaSource": "HR + SCSA"
   },
   {
     "id": "doc-631-3",
@@ -4839,7 +4911,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Audited Proof & Receipts of Welfare Schemes",
     "desc": "PF deposit receipts, insurance premium receipts, maternity orders.",
     "status": "DONT_HAVE",
-    "action": "Gather sample PF challans and maternity leave sanction letters"
+    "action": "Gather sample PF challans and maternity leave sanction letters",
+    "scsaCollect": "Faculty/staff welfare beneficiaries and supporting documents",
+    "scsaSource": "HR + SCSA"
   },
   {
     "id": "doc-632-1",
@@ -4851,7 +4925,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Financial Support Policy for Conferences & Memberships",
     "desc": "Rules and financial limits for faculty conference travel & reg fee.",
     "status": "DONT_HAVE",
-    "action": "Retrieve approved financial support policy document"
+    "action": "Retrieve approved financial support policy document",
+    "scsaCollect": "Faculty conference/FDP/workshop financial support",
+    "scsaSource": "Faculty + Finance"
   },
   {
     "id": "doc-632-2",
@@ -4863,7 +4939,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "E-Copies of Sanction Letters Signed by Finance Officer",
     "desc": "Sanction orders issued to teachers indicating amount sanctioned.",
     "status": "DONT_HAVE",
-    "action": "Collect sanction letters for each year 2021-22 to 2025-26"
+    "action": "Collect sanction letters for each year 2021-22 to 2025-26",
+    "scsaCollect": "Faculty conference/FDP/workshop financial support",
+    "scsaSource": "Faculty + Finance"
   },
   {
     "id": "doc-632-3",
@@ -4875,7 +4953,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Certificates of Conference Participation / Presentation",
     "desc": "Participation certificates of supported faculty matching sanction letters.",
     "status": "DONT_HAVE",
-    "action": "Collect faculty certificates matching the claim list"
+    "action": "Collect faculty certificates matching the claim list",
+    "scsaCollect": "Faculty conference/FDP/workshop financial support",
+    "scsaSource": "Faculty + Finance"
   },
   {
     "id": "doc-632-4",
@@ -4887,7 +4967,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Audited Statement Highlighting Financial Support",
     "desc": "CA signed expenditure statements under faculty development head.",
     "status": "DONT_HAVE",
-    "action": "Request CA extract highlighting financial support to teachers"
+    "action": "Request CA extract highlighting financial support to teachers",
+    "scsaCollect": "Faculty conference/FDP/workshop financial support",
+    "scsaSource": "Faculty + Finance"
   },
   {
     "id": "doc-632-5",
@@ -4899,7 +4981,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Data Template 6.3.2 Completed",
     "desc": "Excel list of teachers, conference names, and amounts received.",
     "status": "DONT_HAVE",
-    "action": "Fill template 6.3.2 with exact payment figures"
+    "action": "Fill template 6.3.2 with exact payment figures",
+    "scsaCollect": "Faculty conference/FDP/workshop financial support",
+    "scsaSource": "Faculty + Finance"
   },
   {
     "id": "doc-633-1",
@@ -4911,7 +4995,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Year-wise List of Professional Dev / Admin Training Programs",
     "desc": "Master list of programs organized for teaching & non-teaching staff.",
     "status": "DONT_HAVE",
-    "action": "Create consolidated list with title, dates, and target group"
+    "action": "Create consolidated list with title, dates, and target group",
+    "scsaCollect": "FDP/workshops/seminars conducted by SCSA",
+    "scsaSource": "Faculty Coordinator"
   },
   {
     "id": "doc-633-2",
@@ -4923,7 +5009,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Program Brochures, Circulars & Schedules",
     "desc": "Circulars issued prior to event and schedule flyers with resource persons.",
     "status": "DONT_HAVE",
-    "action": "Collect event circulars/brochures for each organized FDP"
+    "action": "Collect event circulars/brochures for each organized FDP",
+    "scsaCollect": "FDP/workshops/seminars conducted by SCSA",
+    "scsaSource": "Faculty Coordinator"
   },
   {
     "id": "doc-633-3",
@@ -4935,7 +5023,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Detailed Event Reports with Geo-tagged Photographs",
     "desc": "Summary of outcomes, topics covered, and dated geo-tagged photos.",
     "status": "DONT_HAVE",
-    "action": "Ensure every program has a signed report with 2-4 photos"
+    "action": "Ensure every program has a signed report with 2-4 photos",
+    "scsaCollect": "FDP/workshops/seminars conducted by SCSA",
+    "scsaSource": "Faculty Coordinator"
   },
   {
     "id": "doc-633-4",
@@ -4947,7 +5037,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Signed Participant Attendance Lists",
     "desc": "Attendance sheets signed by participants and course coordinator.",
     "status": "DONT_HAVE",
-    "action": "Scan physical attendance sheets for each workshop"
+    "action": "Scan physical attendance sheets for each workshop",
+    "scsaCollect": "FDP/workshops/seminars conducted by SCSA",
+    "scsaSource": "Faculty Coordinator"
   },
   {
     "id": "doc-633-5",
@@ -4959,7 +5051,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Data Template 6.3.3 Completed",
     "desc": "Standard NAAC excel template for organized programs.",
     "status": "DONT_HAVE",
-    "action": "Fill template 6.3.3 with participant counts"
+    "action": "Fill template 6.3.3 with participant counts",
+    "scsaCollect": "FDP/workshops/seminars conducted by SCSA",
+    "scsaSource": "Faculty Coordinator"
   },
   {
     "id": "doc-634-1",
@@ -4971,7 +5065,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Participation Certificates of Teachers Undergoing FDPs",
     "desc": "E-copies of certificates (Induction, Refresher, FDP >= 5 days).",
     "status": "DONT_HAVE",
-    "action": "Collect certificates from all full-time teachers (must be >= 5 days)"
+    "action": "Collect certificates from all full-time teachers (must be >= 5 days)",
+    "scsaCollect": "Every SCSA faculty member's FDP participation year-wise",
+    "scsaSource": "Each Faculty + HOD"
   },
   {
     "id": "doc-634-2",
@@ -4983,7 +5079,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Annual List of Faculty Attending Programs Approved by Head",
     "desc": "Consolidated list certified by Principal/Director.",
     "status": "DONT_HAVE",
-    "action": "Prepare year-wise list counter-signed by Principal"
+    "action": "Prepare year-wise list counter-signed by Principal",
+    "scsaCollect": "Every SCSA faculty member's FDP participation year-wise",
+    "scsaSource": "Each Faculty + HOD"
   },
   {
     "id": "doc-634-3",
@@ -4995,7 +5093,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Data Template 6.3.4 Completed",
     "desc": "Standard NAAC template with course duration and organization details.",
     "status": "DONT_HAVE",
-    "action": "Verify course dates meet NAAC criteria and fill template"
+    "action": "Verify course dates meet NAAC criteria and fill template",
+    "scsaCollect": "Every SCSA faculty member's FDP participation year-wise",
+    "scsaSource": "Each Faculty + HOD"
   },
   {
     "id": "doc-635-1",
@@ -5007,7 +5107,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Performance Appraisal Policy Document",
     "desc": "Institutional policy on annual appraisal, API scores, and review.",
     "status": "DONT_HAVE",
-    "action": "Attach approved PBAS/Appraisal policy manual"
+    "action": "Attach approved PBAS/Appraisal policy manual",
+    "scsaCollect": "Faculty appraisal records, feedback, development actions",
+    "scsaSource": "HOD + HR"
   },
   {
     "id": "doc-635-2",
@@ -5019,7 +5121,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Sample Filled Appraisal Forms (Teaching & Non-Teaching)",
     "desc": "Redacted sample evaluation forms reviewed by HOD and committee.",
     "status": "DONT_HAVE",
-    "action": "Select 3 sample filled forms (Prof, Assoc Prof, Asst Prof, Staff)"
+    "action": "Select 3 sample filled forms (Prof, Assoc Prof, Asst Prof, Staff)",
+    "scsaCollect": "Faculty appraisal records, feedback, development actions",
+    "scsaSource": "HOD + HR"
   },
   {
     "id": "doc-635-3",
@@ -5031,7 +5135,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Evidence of Appraisal Outcomes & Career Advancement",
     "desc": "Increment circulars, promotion orders, or merit awards based on appraisal.",
     "status": "DONT_HAVE",
-    "action": "Attach sample promotion/increment sanction letters"
+    "action": "Attach sample promotion/increment sanction letters",
+    "scsaCollect": "Faculty appraisal records, feedback, development actions",
+    "scsaSource": "HOD + HR"
   },
   {
     "id": "doc-641-1",
@@ -5043,7 +5149,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Resource Mobilization Policy Document",
     "desc": "BoM/Governing Council approved policy on fund mobilization & resource utilization.",
     "status": "DONT_HAVE",
-    "action": "Retrieve official Resource Mobilization Policy with GC approval date"
+    "action": "Retrieve official Resource Mobilization Policy with GC approval date",
+    "scsaCollect": "SCSA-generated/resource-mobilization activities where applicable",
+    "scsaSource": "HOD + Finance"
   },
   {
     "id": "doc-641-2",
@@ -5055,7 +5163,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Budget Allocation & Optimal Resource Utilization SOP",
     "desc": "Institutional guidelines for departmental budget allocation and deficits.",
     "status": "DONT_HAVE",
-    "action": "Prepare 2-page document outlining budget requisition and scrutiny cycle"
+    "action": "Prepare 2-page document outlining budget requisition and scrutiny cycle",
+    "scsaCollect": "SCSA-generated/resource-mobilization activities where applicable",
+    "scsaSource": "HOD + Finance"
   },
   {
     "id": "doc-642-1",
@@ -5067,7 +5177,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Sanction Letters for Non-Govt Grants / Philanthropy",
     "desc": "Official sanction orders for funds received from non-govt sources.",
     "status": "DONT_HAVE",
-    "action": "Collect letters for endowment funds, donations, NGO grants"
+    "action": "Collect letters for endowment funds, donations, NGO grants",
+    "scsaCollect": "Grants/projects received by SCSA faculty",
+    "scsaSource": "Research/Faculty"
   },
   {
     "id": "doc-642-2",
@@ -5079,7 +5191,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Audited Statements Highlighting Grants Received",
     "desc": "Chartered accountant certified balance sheets indicating non-govt funds.",
     "status": "DONT_HAVE",
-    "action": "Highlight grant line-items in audited balance sheets for 5 years"
+    "action": "Highlight grant line-items in audited balance sheets for 5 years",
+    "scsaCollect": "Grants/projects received by SCSA faculty",
+    "scsaSource": "Research/Faculty"
   },
   {
     "id": "doc-642-3",
@@ -5091,7 +5205,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Data Template 6.4.2 Completed",
     "desc": "Standard NAAC excel template with funds in INR Lakhs.",
     "status": "DONT_HAVE",
-    "action": "Fill template 6.4.2 (exclude research grants from Criterion III)"
+    "action": "Fill template 6.4.2 (exclude research grants from Criterion III)",
+    "scsaCollect": "Grants/projects received by SCSA faculty",
+    "scsaSource": "Research/Faculty"
   },
   {
     "id": "doc-643-1",
@@ -5103,7 +5219,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Policy Document on Internal & External Audit Mechanism",
     "desc": "Institutional SOP defining frequency, audit scope, and CA appointment.",
     "status": "DONT_HAVE",
-    "action": "Compile internal/external audit policy document"
+    "action": "Compile internal/external audit policy document",
+    "scsaCollect": "Department financial records supporting audits where applicable",
+    "scsaSource": "Finance"
   },
   {
     "id": "doc-643-2",
@@ -5115,7 +5233,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Full Financial Audit Reports for Last 5 Years",
     "desc": "Audited Balance Sheets, Income & Expenditure accounts signed by CA.",
     "status": "DONT_HAVE",
-    "action": "Ensure complete 5-year audited financial reports are scanned into folder"
+    "action": "Ensure complete 5-year audited financial reports are scanned into folder",
+    "scsaCollect": "Department financial records supporting audits where applicable",
+    "scsaSource": "Finance"
   },
   {
     "id": "doc-643-3",
@@ -5127,7 +5247,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Internal Audit Reports & Compliance Statements",
     "desc": "Audit objection notes and action taken/compliance reports.",
     "status": "DONT_HAVE",
-    "action": "Collate internal audit notes with rectification certificates"
+    "action": "Collate internal audit notes with rectification certificates",
+    "scsaCollect": "Department financial records supporting audits where applicable",
+    "scsaSource": "Finance"
   },
   {
     "id": "doc-651-1",
@@ -5139,7 +5261,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "IQAC Constitution / Re-constitution Notifications",
     "desc": "Official notification of IQAC members as per latest NAAC composition norms.",
     "status": "DONT_HAVE",
-    "action": "Issue/retrieve latest IQAC composition circular with external experts"
+    "action": "Issue/retrieve latest IQAC composition circular with external experts",
+    "scsaCollect": "SCSA participation in IQAC activities, IQAC compliance/action reports",
+    "scsaSource": "IQAC Coordinator"
   },
   {
     "id": "doc-651-2",
@@ -5151,7 +5275,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Appointment Order of Full-time IQAC Director / Officer",
     "desc": "Official appointment letter detailing duties and workload concession.",
     "status": "DONT_HAVE",
-    "action": "Attach appointment letter of IQAC Coordinator/Director"
+    "action": "Attach appointment letter of IQAC Coordinator/Director",
+    "scsaCollect": "SCSA participation in IQAC activities, IQAC compliance/action reports",
+    "scsaSource": "IQAC Coordinator"
   },
   {
     "id": "doc-651-3",
@@ -5163,7 +5289,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Minutes of IQAC Meetings with Action Taken Reports (ATRs)",
     "desc": "Minutes of minimum 4 meetings/year along with signed Action Taken.",
     "status": "DONT_HAVE",
-    "action": "CRITICAL: Compile all IQAC minutes with explicit Action Taken columns"
+    "action": "CRITICAL: Compile all IQAC minutes with explicit Action Taken columns",
+    "scsaCollect": "SCSA participation in IQAC activities, IQAC compliance/action reports",
+    "scsaSource": "IQAC Coordinator"
   },
   {
     "id": "doc-651-4",
@@ -5175,7 +5303,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Submitted AQARs (Last 5 Years) & Submission Proof",
     "desc": "Copies of submitted AQARs with NAAC portal acknowledgement.",
     "status": "DONT_HAVE",
-    "action": "Download submitted AQAR copies and NAAC email acknowledgements"
+    "action": "Download submitted AQAR copies and NAAC email acknowledgements",
+    "scsaCollect": "SCSA participation in IQAC activities, IQAC compliance/action reports",
+    "scsaSource": "IQAC Coordinator"
   },
   {
     "id": "doc-652-1",
@@ -5187,7 +5317,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Academic and Administrative Audit (AAA) Report & Follow-up",
     "desc": "External peer team AAA report and institutional action taken.",
     "status": "DONT_HAVE",
-    "action": "Scan external AAA audit report signed by external peer experts"
+    "action": "Scan external AAA audit report signed by external peer experts",
+    "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+    "scsaSource": "SCSA + IQAC"
   },
   {
     "id": "doc-652-2",
@@ -5199,7 +5331,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "NIRF Participation Certificate / Score Card",
     "desc": "Evidence of participation in NIRF ranking for assessed years.",
     "status": "DONT_HAVE",
-    "action": "Download NIRF certificate / DCS submission proof"
+    "action": "Download NIRF certificate / DCS submission proof",
+    "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+    "scsaSource": "SCSA + IQAC"
   },
   {
     "id": "doc-652-3",
@@ -5211,7 +5345,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "External Quality Certifications (ISO/NABH/NABL/Green Audit)",
     "desc": "Valid certification copies covering the assessment period.",
     "status": "DONT_HAVE",
-    "action": "Gather valid ISO certificates, Green Audit, and Energy Audit reports"
+    "action": "Gather valid ISO certificates, Green Audit, and Energy Audit reports",
+    "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+    "scsaSource": "SCSA + IQAC"
   },
   {
     "id": "doc-652-4",
@@ -5223,7 +5359,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Collaborative Quality Initiatives & MoUs Signed",
     "desc": "MoUs with other institutions for student/faculty exchange and quality.",
     "status": "DONT_HAVE",
-    "action": "Compile active MoUs highlighting quality enhancement activities"
+    "action": "Compile active MoUs highlighting quality enhancement activities",
+    "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+    "scsaSource": "SCSA + IQAC"
   },
   {
     "id": "doc-652-5",
@@ -5235,7 +5373,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Reports of Conferences/Seminars on Quality Conducted by IQAC",
     "desc": "Detailed reports and photographs of quality enhancement workshops.",
     "status": "DONT_HAVE",
-    "action": "Collect brochures and reports of quality seminars organized"
+    "action": "Collect brochures and reports of quality seminars organized",
+    "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+    "scsaSource": "SCSA + IQAC"
   },
   {
     "id": "doc-652-6",
@@ -5247,7 +5387,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Data Template 6.5.2 Completed",
     "desc": "Standard NAAC excel template for quality initiatives.",
     "status": "DONT_HAVE",
-    "action": "Fill template 6.5.2 with valid certificate dates"
+    "action": "Fill template 6.5.2 with valid certificate dates",
+    "scsaCollect": "Quality initiatives, academic audits, feedback, workshops, improvement activities",
+    "scsaSource": "SCSA + IQAC"
   },
   {
     "id": "doc-653-1",
@@ -5259,7 +5401,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Impact Analysis Report on Quality Initiatives (500 words)",
     "desc": "Narrative detailing incremental improvements based on IQAC decisions.",
     "status": "DONT_HAVE",
-    "action": "Draft 500-word qualitative impact analysis write-up"
+    "action": "Draft 500-word qualitative impact analysis write-up",
+    "scsaCollect": "Impact of SCSA quality initiatives with before/after evidence",
+    "scsaSource": "HOD + IQAC"
   },
   {
     "id": "doc-653-2",
@@ -5271,7 +5415,9 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Data & Graphs on Measurable Quality Improvements",
     "desc": "Comparative graphs showing pass rates, research papers, placements.",
     "status": "DONT_HAVE",
-    "action": "Compile trend graphs showing 5-year growth across academic indicators"
+    "action": "Compile trend graphs showing 5-year growth across academic indicators",
+    "scsaCollect": "Impact of SCSA quality initiatives with before/after evidence",
+    "scsaSource": "HOD + IQAC"
   },
   {
     "id": "doc-653-3",
@@ -5283,6 +5429,8 @@ window.CRITERION_VI_SPECIFIC_DOCS = [
     "title": "Stakeholder Feedback Analysis & Action Taken Documents",
     "desc": "Student, teacher, employer feedback reports and resulting changes.",
     "status": "DONT_HAVE",
-    "action": "Attach consolidated stakeholder feedback analysis and ATRs"
+    "action": "Attach consolidated stakeholder feedback analysis and ATRs",
+    "scsaCollect": "Impact of SCSA quality initiatives with before/after evidence",
+    "scsaSource": "HOD + IQAC"
   }
 ];

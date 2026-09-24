@@ -395,6 +395,28 @@
           ${escapeHtml(metric.indicator || '')}
         </p>
 
+        <!-- SCSA Department Evidence Collection Mandate -->
+        ${metric.scsaCollect ? `
+          <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800/90 dark:to-indigo-950/50 rounded-2xl border-2 border-indigo-200 dark:border-indigo-800/70 p-4 shadow-sm space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center space-x-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold uppercase tracking-wide bg-indigo-600 text-white shadow-xs">
+                  SCSA Department Mandate
+                </span>
+                <span class="text-xs font-bold text-indigo-950 dark:text-indigo-200">Evidence Required from SCSA</span>
+              </div>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-lg bg-white dark:bg-slate-700 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 flex items-center space-x-1">
+                <i class="fa-solid fa-user-tie text-[10px]"></i>
+                <span>Primary Source: ${escapeHtml(metric.scsaSource || 'SCSA')}</span>
+              </span>
+            </div>
+            <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 leading-relaxed bg-white/90 dark:bg-slate-900/80 p-3 rounded-xl border border-indigo-100 dark:border-slate-800">
+              <div class="text-[11px] uppercase tracking-wider text-indigo-600 dark:text-indigo-400 font-bold mb-1">What SCSA should collect:</div>
+              <div>${escapeHtml(metric.scsaCollect)}</div>
+            </div>
+          </div>
+        ` : ''}
+
         <!-- Windows Explorer Main Folder Path -->
         <div class="flex items-center justify-between bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-xl text-xs font-mono text-slate-600 dark:text-slate-300 overflow-hidden">
           <div class="flex items-center space-x-2 truncate mr-2">
@@ -808,6 +830,17 @@
               }).join('')}
             </div>
           </div>
+
+          <!-- SCSA Collection Guide in Card -->
+          ${m.scsaCollect ? `
+            <div class="p-3 rounded-xl bg-blue-50/70 dark:bg-slate-800/80 border border-blue-200 dark:border-indigo-900/50 text-xs">
+              <div class="flex items-center justify-between font-bold text-indigo-900 dark:text-indigo-300 mb-1">
+                <span><i class="fa-solid fa-building-columns mr-1"></i> What SCSA Should Collect:</span>
+                <span class="text-[11px] font-mono text-indigo-600 dark:text-indigo-400">Source: ${escapeHtml(m.scsaSource || '')}</span>
+              </div>
+              <p class="text-slate-700 dark:text-slate-200 leading-relaxed">${escapeHtml(m.scsaCollect)}</p>
+            </div>
+          ` : ''}
 
           <!-- Responsible Dept & Action Plan Row -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
