@@ -22,6 +22,10 @@
   let filterStatus = 'ALL';
   let filterType = 'ALL';
 
+  // Evidence Link Filter in Folder Workspace
+  let evidenceLinkFilter = 'ALL'; // 'ALL' | 'WITH_LINK' | 'NO_LINK'
+  let ssrDebounceTimer = null;
+
   // Submission filters
   let subFilterStatus = 'ALL'; // 'ALL' | 'DONT_HAVE' | 'HAVE'
   let subFilterDept = 'ALL';
@@ -73,7 +77,9 @@
       appData = JSON.parse(JSON.stringify(window.DEFAULT_NAAC_DATA || {}));
     }
 
-    // Ensure all metrics have 2020-21 through 2025-26
+    const starterTemplates = window.NAAC_QLM_STARTER_TEMPLATES || {};
+
+    // Ensure all metrics have 2020-21 through 2025-26, and initialize QlM drafts
     for (const cKey in appData) {
       if (appData[cKey] && appData[cKey].metrics) {
         appData[cKey].metrics.forEach(m => {
@@ -81,6 +87,12 @@
           ACADEMIC_YEARS.forEach(yr => {
             if (!m.years[yr]) m.years[yr] = 'Pending';
           });
+
+          // Ensure ssrTemplate and ssrDraft for QlM metrics
+          if (starterTemplates[m.id]) {
+            if (!m.ssrTemplate) m.ssrTemplate = starterTemplates[m.id];
+            if (!m.ssrDraft) m.ssrDraft = starterTemplates[m.id];
+          }
         });
       }
     }
@@ -117,6 +129,12 @@
     } else {
       submissionDocs = JSON.parse(JSON.stringify(window.CRITERION_VI_SPECIFIC_DOCS || []));
     }
+
+    // Ensure link and faculty fields exist
+    submissionDocs.forEach(d => {
+      if (typeof d.driveUrl === 'undefined') d.driveUrl = '';
+      if (typeof d.assignedFaculty === 'undefined') d.assignedFaculty = '';
+    });
   }
 
   function saveSubmissionDocs() {
@@ -344,11 +362,26 @@
 
     const folderRelative = metric.folder || `${metric.metricNo} Evidence`;
     const folderWindowsPath = `NAAC – Criterion VI\\${folderRelative.replace(/\//g, '\\')}`;
-    const files = metric.evidenceFiles || [];
+    const allFiles = metric.evidenceFiles || [];
     const checklist = metric.checklist || [];
     const suggestedFiles = metric.suggestedFiles || [];
     const isQualitative = (metric.metricType || 'QlM') === 'QlM';
     const my = metric.years || {};
+
+    // Cloud link calculations
+    const withLinkCount = allFiles.filter(f => f.driveUrl && f.driveUrl.trim()).length;
+    const noLinkCount = allFiles.length - withLinkCount;
+
+    // Filter files based on evidenceLinkFilter
+    let displayedFiles = allFiles;
+    if (evidenceLinkFilter === 'WITH_LINK') {
+      displayedFiles = allFiles.filter(f => f.driveUrl && f.driveUrl.trim());
+    } else if (evidenceLinkFilter === 'NO_LINK') {
+      displayedFiles = allFiles.filter(f => !f.driveUrl || !f.driveUrl.trim());
+    }
+
+    // SSR Draft word count info
+    const wordInfo = getWordCountInfo(metric.ssrDraft || '');
 
     container.innerHTML = `
       <!-- Folder Header Card -->
@@ -430,6 +463,84 @@
         </div>
       </div>
 
+      <!-- FEATURE 1: QUALITATIVE METRIC (QlM) 500-WORD SSR DRAFT EDITOR -->
+      ${isQualitative ? `
+        <div class="bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50 dark:from-slate-850 dark:via-purple-950/30 dark:to-slate-850 rounded-2xl border-2 border-purple-200 dark:border-purple-800/60 p-5 shadow-sm space-y-3.5">
+          
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center text-base shadow-sm shadow-purple-500/30">
+                <i class="fa-solid fa-file-pen"></i>
+              </div>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <h3 class="font-bold text-sm text-slate-900 dark:text-white">Qualitative SSR Draft Response (500 Words Limit)</h3>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-200 text-purple-900 dark:bg-purple-900/60 dark:text-purple-200">
+                    NAAC SSR Portal
+                  </span>
+                </div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Strict portal constraint: 500 words maximum. Real-time counter monitors compliance.</p>
+              </div>
+            </div>
+
+            <!-- Live Word Count Badge -->
+            <div class="flex items-center space-x-2">
+              <span id="ssr-word-badge" class="px-3 py-1.5 rounded-xl text-xs font-mono font-bold shadow-xs transition-all ${wordInfo.badgeClass}">
+                ${wordInfo.badgeLabel}
+              </span>
+              <span id="ssr-char-badge" class="text-[11px] font-mono text-slate-500 dark:text-slate-400 hidden sm:inline">
+                ${wordInfo.chars} chars • ${wordInfo.readingTime}
+              </span>
+            </div>
+          </div>
+
+          <!-- Action Bar for SSR Editor -->
+          <div class="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-purple-200/60 dark:border-purple-900/40">
+            <div class="flex flex-wrap items-center gap-2">
+              <button id="btn-insert-ssr-template" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-semibold shadow-xs transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i>
+                <span>Insert SCSA Starter Template</span>
+              </button>
+              <button id="btn-copy-ssr-draft" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-purple-50 dark:hover:bg-slate-600 text-purple-700 dark:text-purple-200 border border-purple-200 dark:border-purple-800 rounded-xl text-xs font-semibold shadow-xs transition flex items-center space-x-1.5">
+                <i class="fa-regular fa-copy"></i>
+                <span>Copy for SSR Portal</span>
+              </button>
+              <button id="btn-save-ssr-draft" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-xs transition flex items-center space-x-1.5">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Save Draft</span>
+              </button>
+            </div>
+
+            <div class="flex items-center space-x-1.5">
+              <button id="btn-download-ssr-draft" class="px-2.5 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold border border-slate-200 dark:border-slate-700 transition flex items-center space-x-1" title="Download draft as .txt">
+                <i class="fa-solid fa-download"></i>
+                <span class="hidden sm:inline">Export</span>
+              </button>
+              <button id="btn-clear-ssr-draft" class="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg text-xs transition" title="Clear Draft">
+                <i class="fa-regular fa-trash-can text-sm"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Draft Textarea -->
+          <div class="relative">
+            <textarea id="ssr-draft-textarea" rows="11" placeholder="Type your 500-word qualitative SSR draft response here, or click 'Insert SCSA Starter Template' above for pre-crafted, high-scoring narrative..." class="w-full p-3.5 rounded-xl font-sans text-xs sm:text-sm leading-relaxed bg-white dark:bg-slate-900 border border-purple-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-inner">${escapeHtml(metric.ssrDraft || '')}</textarea>
+          </div>
+
+          <!-- Bottom Status Bar -->
+          <div class="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+            <div class="flex items-center space-x-1.5" id="ssr-save-status">
+              <i class="fa-solid fa-cloud-arrow-up text-emerald-500"></i>
+              <span>Auto-saved locally in browser storage</span>
+            </div>
+            <div class="text-[11px] italic text-slate-400">
+              Optimal target: 320 to 460 words for maximum peer review impact.
+            </div>
+          </div>
+
+        </div>
+      ` : ''}
+
       <!-- YEAR-WISE MARKING MATRIX (2020/21 TO 2025-26) -->
       <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -439,7 +550,7 @@
               <span>Year-Wise Evidence Audit (2020/21 to 2025-26)</span>
             </h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Click the button for each academic year to toggle between <strong>HAVE</strong> and <strong>DON'T HAVE</strong>.
+              Click the button for each academic year to toggle between <strong>WE HAVE</strong> and <strong>WE DON'T HAVE</strong>.
             </p>
           </div>
           <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
@@ -544,7 +655,7 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             ${suggestedFiles.map(file => {
-              const alreadyLogged = files.some(f => f.name === file);
+              const alreadyLogged = allFiles.some(f => f.name === file);
               return `
                 <div class="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-xs">
                   <div class="flex items-center space-x-2 truncate mr-2">
@@ -568,54 +679,139 @@
         </div>
       ` : ''}
 
-      <!-- Logged Evidence Files Manager -->
+      <!-- FEATURE 4: LOGGED EVIDENCE FILES & CLOUD DRIVE LINK MANAGER -->
       <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center space-x-2">
-            <i class="fa-solid fa-folder-closed text-indigo-600"></i>
-            <h3 class="font-bold text-sm text-slate-900 dark:text-white">Logged Evidence in Folder (${files.length})</h3>
+        
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-folder-closed text-indigo-600"></i>
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white">Logged Evidence in Folder (${allFiles.length})</h3>
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Cloud Drive coverage: <strong>${withLinkCount} of ${allFiles.length} files linked</strong> (${allFiles.length > 0 ? Math.round((withLinkCount / allFiles.length) * 100) : 0}%)
+            </p>
           </div>
-          <button id="btn-open-file-modal" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs transition flex items-center space-x-1.5">
-            <i class="fa-solid fa-plus"></i>
-            <span>Log Document</span>
-          </button>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Filter chips for cloud links -->
+            <div class="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-xs">
+              <button data-link-filter="ALL" class="btn-link-filter px-2.5 py-1 rounded-lg font-semibold transition ${
+                evidenceLinkFilter === 'ALL'
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-white shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }">
+                All (${allFiles.length})
+              </button>
+              <button data-link-filter="WITH_LINK" class="btn-link-filter px-2.5 py-1 rounded-lg font-semibold transition ${
+                evidenceLinkFilter === 'WITH_LINK'
+                  ? 'bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-300 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }">
+                ☁️ Linked (${withLinkCount})
+              </button>
+              <button data-link-filter="NO_LINK" class="btn-link-filter px-2.5 py-1 rounded-lg font-semibold transition ${
+                evidenceLinkFilter === 'NO_LINK'
+                  ? 'bg-white dark:bg-slate-700 text-amber-600 dark:text-amber-300 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+              }">
+                ⚠️ Missing (${noLinkCount})
+              </button>
+            </div>
+
+            <button id="btn-open-file-modal" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-xs transition flex items-center space-x-1.5">
+              <i class="fa-solid fa-plus"></i>
+              <span>Log Document</span>
+            </button>
+          </div>
         </div>
 
-        <div class="space-y-2">
-          ${files.length > 0 ? files.map((file, idx) => `
-            <div class="flex items-center justify-between p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition">
-              <div class="flex items-center space-x-3 truncate mr-3">
-                <div class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-sm flex-shrink-0">
-                  <i class="fa-solid fa-file-lines"></i>
-                </div>
-                <div class="truncate">
-                  <div class="font-medium text-xs text-slate-900 dark:text-white truncate font-mono">${escapeHtml(file.name)}</div>
-                  <div class="text-[11px] text-slate-400 flex items-center space-x-2 mt-0.5">
-                    <span class="font-semibold text-indigo-600 dark:text-indigo-400">${escapeHtml(file.year || '2020-21')}</span>
-                    <span>&bull;</span>
-                    <span>${escapeHtml(file.notes || 'Verified evidence')}</span>
+        <!-- Progress bar for Cloud Link coverage -->
+        <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+          <div class="bg-blue-500 h-full rounded-full transition-all duration-300" style="width: ${allFiles.length > 0 ? (withLinkCount / allFiles.length) * 100 : 0}%"></div>
+        </div>
+
+        <!-- Files list -->
+        <div class="space-y-2.5">
+          ${displayedFiles.length > 0 ? displayedFiles.map(file => {
+            const originalIdx = allFiles.indexOf(file);
+            const hasDrive = Boolean(file.driveUrl && file.driveUrl.trim());
+
+            return `
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition gap-2.5 bg-white dark:bg-slate-850">
+                
+                <div class="flex items-start space-x-3 truncate">
+                  <div class="w-9 h-9 rounded-xl ${hasDrive ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400'} flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                    <i class="${hasDrive ? 'fa-brands fa-google-drive text-base text-amber-500' : 'fa-solid fa-file-lines'}"></i>
+                  </div>
+                  
+                  <div class="truncate">
+                    <div class="flex items-center space-x-2 truncate">
+                      <span class="font-medium text-xs text-slate-900 dark:text-white truncate font-mono">${escapeHtml(file.name)}</span>
+                      ${file.docCategory ? `
+                        <span class="px-2 py-0.2 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex-shrink-0">
+                          ${escapeHtml(file.docCategory)}
+                        </span>
+                      ` : ''}
+                    </div>
+
+                    <div class="text-[11px] text-slate-400 flex flex-wrap items-center gap-1.5 mt-1">
+                      <span class="font-semibold text-indigo-600 dark:text-indigo-400">${escapeHtml(file.year || '2020-21')}</span>
+                      <span>&bull;</span>
+                      ${file.assignedFaculty ? `
+                        <span class="px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold text-[10px] flex items-center space-x-1 border border-indigo-100 dark:border-indigo-800">
+                          <i class="fa-solid fa-user-tie text-[9px]"></i>
+                          <span>${escapeHtml(file.assignedFaculty)}</span>
+                        </span>
+                        <span>&bull;</span>
+                      ` : ''}
+                      <span class="truncate max-w-[240px] text-slate-500 dark:text-slate-400">${escapeHtml(file.notes || 'Evidence proof')}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="flex items-center space-x-2 flex-shrink-0">
-                <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
-                  file.status === 'Verified by IQAC' || file.status === 'Ready for SSR'
-                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300'
-                    : 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300'
-                }">
-                  ${escapeHtml(file.status || 'Draft')}
-                </span>
-                <button data-delete-file-idx="${idx}" class="btn-delete-file p-1.5 text-slate-400 hover:text-rose-600 transition" title="Remove File Entry">
-                  <i class="fa-regular fa-trash-can text-xs"></i>
-                </button>
+                <div class="flex items-center space-x-2 flex-shrink-0 self-end sm:self-auto">
+                  ${hasDrive ? `
+                    <a href="${escapeHtml(file.driveUrl)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 dark:hover:bg-blue-900/60 rounded-lg text-xs font-semibold flex items-center space-x-1.5 shadow-xs transition" title="Open Cloud Document">
+                      <i class="fa-brands fa-google-drive text-amber-500"></i>
+                      <span>Open Evidence</span>
+                      <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                    <button data-copy-link="${escapeHtml(file.driveUrl)}" class="btn-copy-file-link p-1.5 text-slate-400 hover:text-blue-600 transition" title="Copy Cloud Drive URL">
+                      <i class="fa-regular fa-copy text-xs"></i>
+                    </button>
+                  ` : `
+                    <button data-edit-file-idx="${originalIdx}" class="btn-edit-file px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 rounded-lg text-xs font-semibold flex items-center space-x-1 transition shadow-xs" title="Attach Google Drive Link">
+                      <i class="fa-solid fa-link text-amber-500"></i>
+                      <span>+ Attach Link</span>
+                    </button>
+                  `}
+
+                  <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
+                    file.status === 'Verified by IQAC' || file.status === 'Ready for SSR'
+                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300'
+                      : 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300'
+                  }">
+                    ${escapeHtml(file.status || 'Draft')}
+                  </span>
+
+                  <button data-edit-file-idx="${originalIdx}" class="btn-edit-file p-1.5 text-slate-400 hover:text-indigo-600 transition" title="Edit Evidence & Link">
+                    <i class="fa-regular fa-pen-to-square text-xs"></i>
+                  </button>
+                  <button data-delete-file-idx="${originalIdx}" class="btn-delete-file p-1.5 text-slate-400 hover:text-rose-600 transition" title="Remove File Entry">
+                    <i class="fa-regular fa-trash-can text-xs"></i>
+                  </button>
+                </div>
+
               </div>
-            </div>
-          `).join('') : `
+            `;
+          }).join('') : `
             <div class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl p-6 text-center text-slate-400">
               <i class="fa-solid fa-cloud-arrow-up text-3xl mb-2 text-slate-300 dark:text-slate-600"></i>
-              <p class="text-xs font-medium text-slate-600 dark:text-slate-300">No individual documents logged yet in this folder</p>
-              <p class="text-[11px] text-slate-400 mt-1">Copy files into your local directory: <code class="font-mono">${escapeHtml(folderWindowsPath)}</code>, then log them above.</p>
+              <p class="text-xs font-medium text-slate-600 dark:text-slate-300">
+                ${allFiles.length > 0 ? 'No documents match the current link filter' : 'No individual documents logged yet in this folder'}
+              </p>
+              <p class="text-[11px] text-slate-400 mt-1">Copy files into your local directory: <code class="font-mono">${escapeHtml(folderWindowsPath)}</code>, then log or paste drive links above.</p>
             </div>
           `}
         </div>
@@ -648,7 +844,6 @@
         const yr = btn.getAttribute('data-yr-toggle');
         if (!metric.years) metric.years = {};
         const current = metric.years[yr];
-        // Toggle HAVE vs DON'T HAVE
         metric.years[yr] = (current === 'Available') ? 'Missing' : 'Available';
         saveData();
         renderFolderWorkspace();
@@ -686,7 +881,8 @@
           name: fileName,
           year: '2020-21',
           status: 'Ready for SSR',
-          notes: 'Standard NAAC documentary proof'
+          notes: 'Standard NAAC documentary proof',
+          docCategory: 'Policy & SOP'
         });
         saveData();
         renderFolderWorkspace();
@@ -695,16 +891,43 @@
       });
     });
 
+    // Link filter buttons
+    container.querySelectorAll('.btn-link-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        evidenceLinkFilter = btn.getAttribute('data-link-filter');
+        renderFolderWorkspace();
+      });
+    });
+
+    // Edit file / Attach Link
+    container.querySelectorAll('.btn-edit-file').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-edit-file-idx'), 10);
+        openAddFileModal(idx);
+      });
+    });
+
+    // Copy cloud link
+    container.querySelectorAll('.btn-copy-file-link').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const link = btn.getAttribute('data-copy-link');
+        copyToClipboard(link, 'Cloud Drive URL copied to clipboard!');
+      });
+    });
+
     // Delete logged file
     container.querySelectorAll('.btn-delete-file').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.getAttribute('data-delete-file-idx'), 10);
         if (metric.evidenceFiles && metric.evidenceFiles[idx]) {
-          metric.evidenceFiles.splice(idx, 1);
-          saveData();
-          renderFolderWorkspace();
-          renderFolderTree();
-          showToast('Evidence document removed from log');
+          const removedName = metric.evidenceFiles[idx].name;
+          if (confirm(`Remove "${removedName}" from logged evidence?`)) {
+            metric.evidenceFiles.splice(idx, 1);
+            saveData();
+            renderFolderWorkspace();
+            renderFolderTree();
+            showToast('Evidence document removed from log');
+          }
         }
       });
     });
@@ -714,6 +937,132 @@
       btnOpenFileModal.addEventListener('click', () => {
         openAddFileModal();
       });
+    }
+
+    // SSR Draft Editor Event Listeners
+    if (isQualitative) {
+      const ta = document.getElementById('ssr-draft-textarea');
+      const wordBadge = document.getElementById('ssr-word-badge');
+      const charBadge = document.getElementById('ssr-char-badge');
+      const saveStatus = document.getElementById('ssr-save-status');
+
+      if (ta) {
+        ta.addEventListener('input', () => {
+          const text = ta.value;
+          const info = getWordCountInfo(text);
+
+          if (wordBadge) {
+            wordBadge.className = `px-3 py-1.5 rounded-xl text-xs font-mono font-bold shadow-xs transition-all ${info.badgeClass}`;
+            wordBadge.textContent = info.badgeLabel;
+          }
+
+          if (charBadge) {
+            charBadge.textContent = `${info.chars} chars • ${info.readingTime}`;
+          }
+
+          if (saveStatus) {
+            saveStatus.innerHTML = `<i class="fa-solid fa-pen-nib text-amber-500"></i><span>Typing...</span>`;
+          }
+
+          // Debounced auto-save (400ms)
+          clearTimeout(ssrDebounceTimer);
+          ssrDebounceTimer = setTimeout(() => {
+            metric.ssrDraft = text;
+            saveData();
+            if (saveStatus) {
+              saveStatus.innerHTML = `<i class="fa-solid fa-cloud-arrow-up text-emerald-500"></i><span>Auto-saved at ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+            }
+          }, 400);
+        });
+      }
+
+      // Insert SCSA Starter Template
+      const btnInsertTemplate = document.getElementById('btn-insert-ssr-template');
+      if (btnInsertTemplate) {
+        btnInsertTemplate.addEventListener('click', () => {
+          const starterTemplates = window.NAAC_QLM_STARTER_TEMPLATES || {};
+          const template = starterTemplates[metric.id] || metric.ssrTemplate || '';
+          if (!template) {
+            showToast('No specific template found for this metric.', 'warning');
+            return;
+          }
+
+          if (ta && ta.value.trim() && ta.value.trim() !== template.trim()) {
+            if (!confirm('Replace your current draft with the official SCSA starter template?')) {
+              return;
+            }
+          }
+
+          metric.ssrDraft = template;
+          if (ta) ta.value = template;
+          saveData();
+          renderFolderWorkspace();
+          showToast(`SCSA Starter Template inserted for Metric ${metric.metricNo}!`);
+        });
+      }
+
+      // Copy for SSR Portal
+      const btnCopySsr = document.getElementById('btn-copy-ssr-draft');
+      if (btnCopySsr) {
+        btnCopySsr.addEventListener('click', () => {
+          const text = (ta ? ta.value : (metric.ssrDraft || '')).trim();
+          if (!text) {
+            showToast('SSR Draft is currently empty.', 'warning');
+            return;
+          }
+          const info = getWordCountInfo(text);
+          copyToClipboard(text, `Copied ${info.words} words! Ready to paste into NAAC SSR Portal.`);
+        });
+      }
+
+      // Save Draft explicitly
+      const btnSaveSsr = document.getElementById('btn-save-ssr-draft');
+      if (btnSaveSsr) {
+        btnSaveSsr.addEventListener('click', () => {
+          if (ta) metric.ssrDraft = ta.value;
+          saveData();
+          const info = getWordCountInfo(metric.ssrDraft);
+          showToast(`Draft saved (${info.words} words)`);
+        });
+      }
+
+      // Download single metric SSR draft
+      const btnDownloadSsr = document.getElementById('btn-download-ssr-draft');
+      if (btnDownloadSsr) {
+        btnDownloadSsr.addEventListener('click', () => {
+          const text = (ta ? ta.value : (metric.ssrDraft || '')).trim();
+          const info = getWordCountInfo(text);
+          const fullDoc = `========================================================================
+NAAC CRITERION VI - QUALITATIVE METRIC RESPONSE (QlM)
+Metric: ${metric.metricNo} (${metric.weightage || ''} Marks)
+Indicator: ${metric.indicator || ''}
+Word Count: ${info.words} / 500 Words
+========================================================================
+
+${text}
+
+========================================================================
+Exported from NAAC Criterion VI & SCSA Evidence Tracker
+Date: ${new Date().toLocaleDateString('en-IN', { dateStyle: 'full' })}
+========================================================================`;
+          downloadTextFile(`NAAC_Metric_${metric.metricNo}_SSR_Draft.txt`, fullDoc);
+          showToast(`Downloaded Metric ${metric.metricNo} SSR draft`);
+        });
+      }
+
+      // Clear draft
+      const btnClearSsr = document.getElementById('btn-clear-ssr-draft');
+      if (btnClearSsr) {
+        btnClearSsr.addEventListener('click', () => {
+          if (confirm(`Clear draft write-up for Metric ${metric.metricNo}?`)) {
+            metric.ssrDraft = '';
+            if (ta) ta.value = '';
+            saveData();
+            renderFolderWorkspace();
+            showToast('Draft cleared');
+          }
+        });
+      }
     }
   }
 
@@ -749,236 +1098,234 @@
 
     if (metrics.length === 0) {
       container.innerHTML = `
-        <div class="bg-white dark:bg-slate-850 p-12 text-center rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-400">
+        <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 text-center text-slate-400">
           <i class="fa-solid fa-filter-circle-xmark text-4xl mb-3 text-slate-300 dark:text-slate-600"></i>
-          <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">No metrics match the current filters</p>
-          <p class="text-xs text-slate-400 mt-1">Try clearing search terms or resetting filters.</p>
+          <p class="font-medium text-slate-600 dark:text-slate-300">No metrics match the selected filter criteria</p>
+          <button id="btn-reset-filters" class="mt-3 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg text-xs font-semibold">
+            Reset Filters
+          </button>
         </div>
       `;
+      const btnReset = document.getElementById('btn-reset-filters');
+      if (btnReset) {
+        btnReset.addEventListener('click', () => {
+          searchQuery = '';
+          filterIndicator = 'ALL';
+          filterStatus = 'ALL';
+          filterType = 'ALL';
+          document.getElementById('matrix-search').value = '';
+          document.getElementById('filter-indicator').value = 'ALL';
+          document.getElementById('filter-status').value = 'ALL';
+          document.getElementById('filter-type').value = 'ALL';
+          renderGapMatrix();
+        });
+      }
       return;
     }
 
     if (matrixViewMode === 'cards') {
-      container.innerHTML = renderMatrixCards(metrics);
+      renderMatrixCards(metrics);
     } else {
-      container.innerHTML = renderMatrixTable(metrics);
+      renderMatrixTable(metrics);
     }
-
-    attachMatrixEventListeners(container);
   }
 
   function renderMatrixCards(metrics) {
-    return metrics.map(m => {
-      const isQual = (m.metricType || 'QlM') === 'QlM';
+    const container = document.getElementById('matrix-items-container');
+    container.innerHTML = metrics.map(m => {
+      const isQualitative = (m.metricType || 'QlM') === 'QlM';
+      const my = m.years || {};
+      const files = m.evidenceFiles || [];
+      const withLinkCount = files.filter(f => f.driveUrl && f.driveUrl.trim()).length;
+      const wordInfo = getWordCountInfo(m.ssrDraft || '');
 
       return `
-        <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4 hover:border-slate-300 dark:hover:border-slate-700 transition">
+        <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-4 transition hover:border-slate-300 dark:hover:border-slate-700">
           
-          <div class="flex flex-wrap items-start justify-between gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div class="flex items-center space-x-3">
-              <span class="px-3 py-1 rounded-xl text-xs font-bold font-mono bg-indigo-50 text-indigo-700 dark:bg-indigo-900/50 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div class="flex items-start space-x-3">
+              <span class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-center text-sm flex-shrink-0">
                 ${escapeHtml(m.metricNo)}
               </span>
-              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${
-                isQual ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'
-              }">
-                ${m.metricType || 'QlM'}
-              </span>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
-                Weight: ${escapeHtml(m.weightage || '-')}
-              </span>
+              <div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-bold text-slate-900 dark:text-white">${escapeHtml(m.keyIndicator || '')}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                    isQualitative 
+                      ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300' 
+                      : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300'
+                  }">
+                    ${m.metricType || 'QlM'}
+                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
+                    Weight: ${m.weightage || '-'}
+                  </span>
+                </div>
+                <p class="text-xs text-slate-700 dark:text-slate-300 mt-1 leading-relaxed max-w-3xl">
+                  ${escapeHtml(m.indicator)}
+                </p>
+              </div>
             </div>
 
+            <!-- Status Badge & Jump to Folder -->
             <div class="flex items-center space-x-2">
-              <button data-switch-folder="${m.id}" class="text-xs text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 font-medium flex items-center space-x-1">
-                <i class="fa-solid fa-folder-tree"></i>
-                <span>Open Folder</span>
+              <span class="px-2.5 py-1 rounded-xl text-xs font-semibold ${
+                m.status === 'Completed'
+                  ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300'
+                  : m.status === 'In Progress'
+                  ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300'
+                  : 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+              }">
+                ${escapeHtml(m.status || 'Not Started')}
+              </span>
+              <button data-jump-folder="${m.id}" class="btn-jump-folder px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-300 rounded-xl text-xs font-semibold transition" title="Open Folder Workspace">
+                <i class="fa-solid fa-folder-open mr-1"></i> Workspace
               </button>
-              <select data-metric-status-id="${m.id}" class="matrix-status-select text-xs font-semibold px-2.5 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100">
-                <option value="Not Started" ${m.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
-                <option value="In Progress" ${m.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-                <option value="Under Review" ${m.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
-                <option value="Completed" ${m.status === 'Completed' ? 'selected' : ''}>Completed</option>
-              </select>
             </div>
           </div>
 
-          <p class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">
-            ${escapeHtml(m.indicator || '')}
-          </p>
-
-          <!-- 6-Year Assessment Row (2020-21 to 2025-26) -->
-          <div>
-            <div class="text-[11px] font-bold uppercase text-slate-400 mb-1.5 flex items-center justify-between">
-              <span>6-Year Compliance Matrix (2020/21 to 2025-26)</span>
-              <span class="font-normal text-slate-400">${(m.evidenceFiles || []).length} Logged Files</span>
+          <!-- 6-Year Interactive Pills Row -->
+          <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 flex items-center justify-between">
+              <span>6-Year Evidence Availability (Click pill to cycle status):</span>
+              <span class="font-mono text-indigo-600 dark:text-indigo-400">
+                ${ACADEMIC_YEARS.filter(yr => my[yr] === 'Available').length} / 6 Years Complete
+              </span>
             </div>
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
               ${ACADEMIC_YEARS.map(yr => {
-                const val = (m.years || {})[yr] || 'Pending';
-                let bg = 'bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-400';
-                if (val === 'Available') bg = 'bg-emerald-50 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 font-bold';
-                else if (val === 'Partial') bg = 'bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300';
-                else if (val === 'Missing') bg = 'bg-rose-50 text-rose-800 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 font-bold';
+                const yrStatus = my[yr] || 'Pending';
+                let pillBg = 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300';
+                if (yrStatus === 'Available') pillBg = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300';
+                else if (yrStatus === 'Partial') pillBg = 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300';
+                else if (yrStatus === 'Missing') pillBg = 'bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300';
 
                 return `
-                  <button data-m-id="${m.id}" data-year="${yr}" class="matrix-year-btn year-pill py-2 px-1.5 rounded-lg border text-center transition ${bg}">
-                    <div class="text-[10px] font-mono font-bold">${yr}</div>
-                    <div class="text-[9px] uppercase font-semibold mt-0.5">${val}</div>
+                  <button data-cycle-metric="${m.id}" data-cycle-year="${yr}" class="btn-cycle-year p-2 rounded-lg text-center transition hover:shadow-xs border border-transparent hover:border-indigo-400 ${pillBg}">
+                    <div class="text-[10px] uppercase font-bold tracking-wider opacity-80">${yr}</div>
+                    <div class="text-xs font-extrabold mt-0.5">${yrStatus}</div>
                   </button>
                 `;
               }).join('')}
             </div>
           </div>
 
-          <!-- SCSA Collection Guide in Card -->
-          ${m.scsaCollect ? `
-            <div class="p-3 rounded-xl bg-blue-50/70 dark:bg-slate-800/80 border border-blue-200 dark:border-indigo-900/50 text-xs">
-              <div class="flex items-center justify-between font-bold text-indigo-900 dark:text-indigo-300 mb-1">
-                <span><i class="fa-solid fa-building-columns mr-1"></i> What SCSA Should Collect:</span>
-                <span class="text-[11px] font-mono text-indigo-600 dark:text-indigo-400">Source: ${escapeHtml(m.scsaSource || '')}</span>
-              </div>
-              <p class="text-slate-700 dark:text-slate-200 leading-relaxed">${escapeHtml(m.scsaCollect)}</p>
+          <!-- Bottom Row: Evidence Stats, SSR Draft status, Dept -->
+          <div class="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 pt-1">
+            <div class="flex items-center space-x-3">
+              <span class="flex items-center space-x-1">
+                <i class="fa-solid fa-folder-closed text-slate-400"></i>
+                <span>${files.length} Documents Logged</span>
+              </span>
+              <span>&bull;</span>
+              <span class="flex items-center space-x-1 ${withLinkCount > 0 ? 'text-blue-600 dark:text-blue-400 font-semibold' : ''}">
+                <i class="fa-brands fa-google-drive text-amber-500"></i>
+                <span>${withLinkCount} Drive Links</span>
+              </span>
+              ${isQualitative ? `
+                <span>&bull;</span>
+                <span class="flex items-center space-x-1 ${wordInfo.words > 0 ? 'text-purple-600 dark:text-purple-400 font-semibold' : ''}">
+                  <i class="fa-solid fa-file-pen text-purple-500"></i>
+                  <span>SSR Draft: ${wordInfo.words}/500 Words</span>
+                </span>
+              ` : ''}
             </div>
-          ` : ''}
 
-          <!-- Responsible Dept & Action Plan Row -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Responsible Dept. / Office</label>
-              <input type="text" data-field="responsible" data-m-id="${m.id}" value="${escapeHtml(m.responsible || '')}" placeholder="e.g. SCSA - HOD, ADMIN, HR" class="matrix-inline-input w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
-            </div>
-
-            <div>
-              <label class="block text-[11px] font-semibold text-slate-500 mb-1">Gap / Corrective Action Plan</label>
-              <input type="text" data-field="actionPlan" data-m-id="${m.id}" value="${escapeHtml(m.actionPlan || '')}" placeholder="Action steps and deadlines..." class="matrix-inline-input w-full text-xs px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-indigo-500" />
+            <div class="flex items-center space-x-2">
+              <span class="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[11px] font-mono">
+                Primary: ${escapeHtml(m.scsaSource || m.responsible || 'IQAC')}
+              </span>
             </div>
           </div>
 
         </div>
       `;
     }).join('');
+
+    attachMatrixEventListeners(container);
   }
 
   function renderMatrixTable(metrics) {
-    return `
-      <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-600 dark:text-slate-300">
-            <thead class="bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 font-semibold border-b border-slate-200 dark:border-slate-700">
-              <tr>
-                <th class="py-3 px-3">Metric</th>
-                <th class="py-3 px-2">Weight</th>
-                <th class="py-3 px-3 min-w-[240px]">Indicator & Folder</th>
-                ${ACADEMIC_YEARS.map(yr => `<th class="py-3 px-2 text-center font-mono">${yr}</th>`).join('')}
-                <th class="py-3 px-3 min-w-[130px]">Responsible</th>
-                <th class="py-3 px-3 min-w-[150px]">Action Plan</th>
-                <th class="py-3 px-3">Status</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-              ${metrics.map(m => `
-                <tr class="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition">
-                  <td class="py-2.5 px-3 font-mono font-bold text-indigo-600 dark:text-indigo-400">
-                    <button data-switch-folder="${m.id}" class="hover:underline flex items-center space-x-1">
-                      <span>${escapeHtml(m.metricNo)}</span>
-                      <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                    </button>
-                  </td>
-                  <td class="py-2.5 px-2 font-semibold text-slate-800 dark:text-slate-100">${escapeHtml(m.weightage || '-')}</td>
-                  <td class="py-2.5 px-3">
-                    <div class="font-medium text-slate-800 dark:text-slate-200 leading-snug line-clamp-2" title="${escapeHtml(m.indicator || '')}">
-                      ${escapeHtml(m.indicator || '')}
-                    </div>
-                    <div class="text-[10px] text-slate-400 font-mono mt-0.5 truncate max-w-[240px]">
-                      ${escapeHtml(m.folder || '')}
-                    </div>
-                  </td>
-                  ${ACADEMIC_YEARS.map(yr => {
-                    const val = (m.years || {})[yr] || 'Pending';
-                    let color = 'text-slate-400';
-                    if (val === 'Available') color = 'text-emerald-600 font-bold bg-emerald-50 dark:bg-emerald-950/40';
-                    else if (val === 'Partial') color = 'text-amber-500 font-semibold bg-amber-50 dark:bg-amber-950/40';
-                    else if (val === 'Missing') color = 'text-rose-600 font-bold bg-rose-50 dark:bg-rose-950/40';
+    const container = document.getElementById('matrix-items-container');
+    container.innerHTML = `
+      <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-x-auto shadow-sm">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-800">
+            <tr>
+              <th class="py-3 px-3">Metric</th>
+              <th class="py-3 px-3">Weight</th>
+              <th class="py-3 px-3">Description</th>
+              ${ACADEMIC_YEARS.map(yr => `<th class="py-3 px-2 text-center font-mono">${yr}</th>`).join('')}
+              <th class="py-3 px-3 text-center">Cloud Links</th>
+              <th class="py-3 px-3">Status</th>
+              <th class="py-3 px-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+            ${metrics.map(m => {
+              const my = m.years || {};
+              const files = m.evidenceFiles || [];
+              const withLink = files.filter(f => f.driveUrl && f.driveUrl.trim()).length;
 
+              return `
+                <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                  <td class="py-2.5 px-3 font-mono font-bold text-slate-900 dark:text-white">${escapeHtml(m.metricNo)}</td>
+                  <td class="py-2.5 px-3 font-bold text-center">${escapeHtml(m.weightage || '-')}</td>
+                  <td class="py-2.5 px-3 max-w-xs truncate" title="${escapeHtml(m.indicator)}">${escapeHtml(m.indicator)}</td>
+                  ${ACADEMIC_YEARS.map(yr => {
+                    const st = my[yr] || 'Pending';
+                    let color = 'text-slate-400';
+                    if (st === 'Available') color = 'text-emerald-600 font-bold';
+                    else if (st === 'Partial') color = 'text-amber-500 font-bold';
+                    else if (st === 'Missing') color = 'text-rose-600 font-bold';
                     return `
-                      <td class="py-2.5 px-1 text-center">
-                        <button data-m-id="${m.id}" data-year="${yr}" class="matrix-year-btn px-2 py-1 rounded text-[10px] uppercase font-mono transition ${color}">
-                          ${val.slice(0, 4)}
+                      <td class="py-2.5 px-2 text-center">
+                        <button data-cycle-metric="${m.id}" data-cycle-year="${yr}" class="btn-cycle-year px-1.5 py-0.5 rounded text-[11px] ${color} hover:bg-slate-100 dark:hover:bg-slate-800">
+                          ${st === 'Available' ? '✓' : st === 'Missing' ? '✗' : '~'}
                         </button>
                       </td>
                     `;
                   }).join('')}
-                  <td class="py-2.5 px-3">
-                    <input type="text" data-field="responsible" data-m-id="${m.id}" value="${escapeHtml(m.responsible || '')}" class="matrix-inline-input w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-transparent text-slate-800 dark:text-slate-100" />
+                  <td class="py-2.5 px-3 text-center font-mono ${withLink > 0 ? 'text-blue-600 font-bold' : 'text-slate-400'}">
+                    ${withLink}/${files.length}
                   </td>
-                  <td class="py-2.5 px-3">
-                    <input type="text" data-field="actionPlan" data-m-id="${m.id}" value="${escapeHtml(m.actionPlan || '')}" class="matrix-inline-input w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-transparent text-slate-800 dark:text-slate-100" />
-                  </td>
-                  <td class="py-2.5 px-3">
-                    <select data-metric-status-id="${m.id}" class="matrix-status-select text-[11px] font-semibold px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-slate-100">
-                      <option value="Not Started" ${m.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
-                      <option value="In Progress" ${m.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
-                      <option value="Under Review" ${m.status === 'Under Review' ? 'selected' : ''}>Under Review</option>
-                      <option value="Completed" ${m.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                    </select>
+                  <td class="py-2.5 px-3 font-semibold">${escapeHtml(m.status || 'Not Started')}</td>
+                  <td class="py-2.5 px-3 text-right">
+                    <button data-jump-folder="${m.id}" class="btn-jump-folder px-2 py-1 rounded bg-indigo-50 text-indigo-600 font-semibold hover:bg-indigo-100 text-[11px]">
+                      Workspace
+                    </button>
                   </td>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     `;
+
+    attachMatrixEventListeners(container);
   }
 
   function attachMatrixEventListeners(container) {
-    container.querySelectorAll('[data-switch-folder]').forEach(btn => {
+    // Jump to folder
+    container.querySelectorAll('.btn-jump-folder').forEach(btn => {
       btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-switch-folder');
-        activeMetricId = id;
+        activeMetricId = btn.getAttribute('data-jump-folder');
         switchTab('folders');
       });
     });
 
-    container.querySelectorAll('.matrix-year-btn').forEach(btn => {
+    // Cycle year status
+    container.querySelectorAll('.btn-cycle-year').forEach(btn => {
       btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-m-id');
-        const yr = btn.getAttribute('data-year');
+        const metricId = btn.getAttribute('data-cycle-metric');
+        const year = btn.getAttribute('data-cycle-year');
         const metrics = getActiveMetrics();
-        const m = metrics.find(item => item.id === id);
-        if (m) {
-          cycleYearStatus(m, yr);
+        const metric = metrics.find(m => m.id === metricId);
+        if (metric) {
+          cycleYearStatus(metric, year);
           saveData();
           renderGapMatrix();
-        }
-      });
-    });
-
-    container.querySelectorAll('.matrix-inline-input').forEach(input => {
-      input.addEventListener('change', (e) => {
-        const id = e.target.getAttribute('data-m-id');
-        const field = e.target.getAttribute('data-field');
-        const metrics = getActiveMetrics();
-        const m = metrics.find(item => item.id === id);
-        if (m && field) {
-          m[field] = e.target.value;
-          saveData();
-          showToast(`Updated ${field} for ${m.metricNo}`);
-        }
-      });
-    });
-
-    container.querySelectorAll('.matrix-status-select').forEach(select => {
-      select.addEventListener('change', (e) => {
-        const id = e.target.getAttribute('data-metric-status-id');
-        const metrics = getActiveMetrics();
-        const m = metrics.find(item => item.id === id);
-        if (m) {
-          m.status = e.target.value;
-          saveData();
-          renderGapMatrix();
-          showToast(`Status updated for ${m.metricNo}`);
         }
       });
     });
@@ -987,12 +1334,12 @@
   function cycleYearStatus(metric, year) {
     if (!metric.years) metric.years = {};
     const current = metric.years[year] || 'Pending';
-    let next = 'Available';
-    if (current === 'Pending') next = 'Available';
-    else if (current === 'Available') next = 'Partial';
-    else if (current === 'Partial') next = 'Missing';
-    else if (current === 'Missing') next = 'Pending';
-    metric.years[year] = next;
+    // 3-state cycle: Pending -> Available -> Missing -> Pending
+    if (current === 'Pending') metric.years[year] = 'Available';
+    else if (current === 'Available') metric.years[year] = 'Missing';
+    else metric.years[year] = 'Pending';
+
+    showToast(`Metric ${metric.metricNo} (${year}) set to ${metric.years[year]}`);
   }
 
   // --- VIEW 3: EXECUTIVE ANALYTICS ---
@@ -1006,77 +1353,78 @@
     if (!tbody) return;
 
     const metrics = getActiveMetrics();
-    const highWeight = metrics
+    const highWeightMetrics = metrics
       .filter(m => (parseFloat(m.weightage) || 0) >= 7)
       .sort((a, b) => (parseFloat(b.weightage) || 0) - (parseFloat(a.weightage) || 0));
 
-    if (highWeight.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">No metrics with weightage >= 7 found in active criterion.</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = highWeight.map(m => {
-      let statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-600">Not Started</span>';
-      if (m.status === 'Completed') statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-100 text-emerald-800">Completed</span>';
-      else if (m.status === 'In Progress') statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800">In Progress</span>';
-      else if (m.status === 'Under Review') statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-100 text-blue-800">Under Review</span>';
-
+    tbody.innerHTML = highWeightMetrics.map(m => {
+      const isQualitative = (m.metricType || 'QlM') === 'QlM';
       return `
-        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-          <td class="py-2.5 px-3 font-mono font-bold text-indigo-600">${escapeHtml(m.metricNo)}</td>
+        <tr class="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+          <td class="py-2.5 px-3 font-mono font-bold text-slate-900 dark:text-white">${escapeHtml(m.metricNo)}</td>
           <td class="py-2.5 px-3">
-            <span class="px-2 py-0.5 rounded-full font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300">
+            <span class="px-2 py-0.5 rounded font-extrabold bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">
               ${escapeHtml(m.weightage)} Marks
             </span>
           </td>
-          <td class="py-2.5 px-3 text-slate-500">${escapeHtml(m.keyIndicator || '')}</td>
-          <td class="py-2.5 px-3 font-medium text-slate-800 dark:text-slate-200">${escapeHtml(m.indicator || '')}</td>
-          <td class="py-2.5 px-3">${statusBadge}</td>
-          <td class="py-2.5 px-3 font-medium text-slate-600 dark:text-slate-300">${escapeHtml(m.actionPlan || 'Audit required')}</td>
+          <td class="py-2.5 px-3 font-medium">${escapeHtml(m.keyIndicator || '')}</td>
+          <td class="py-2.5 px-3 max-w-sm truncate" title="${escapeHtml(m.indicator)}">${escapeHtml(m.indicator)}</td>
+          <td class="py-2.5 px-3">
+            <span class="px-2 py-0.5 rounded text-[11px] font-semibold ${
+              m.status === 'Completed'
+                ? 'bg-emerald-100 text-emerald-800'
+                : m.status === 'In Progress'
+                ? 'bg-amber-100 text-amber-800'
+                : 'bg-slate-100 text-slate-700'
+            }">
+              ${escapeHtml(m.status || 'Not Started')}
+            </span>
+          </td>
+          <td class="py-2.5 px-3">
+            <button data-jump-folder="${m.id}" class="btn-jump-folder px-2 py-1 rounded bg-indigo-50 text-indigo-600 font-semibold hover:bg-indigo-100 text-[11px]">
+              Open Workspace
+            </button>
+          </td>
         </tr>
       `;
     }).join('');
+
+    tbody.querySelectorAll('.btn-jump-folder').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeMetricId = btn.getAttribute('data-jump-folder');
+        switchTab('folders');
+      });
+    });
   }
 
   function renderAnalyticsCharts() {
     if (typeof Chart === 'undefined') return;
 
-    const isDark = document.documentElement.classList.contains('dark');
-    const textColor = isDark ? '#94a3b8' : '#475569';
-    const gridColor = isDark ? '#334155' : '#e2e8f0';
-
     const metrics = getActiveMetrics();
 
-    // 1. Key Indicator Readiness
-    const kiStats = {};
+    // Chart 1: Key Indicator Readiness
+    const kiGroups = {};
     metrics.forEach(m => {
-      const prefixMatch = m.metricNo.match(/^(\d+\.\d+)/);
-      const prefix = prefixMatch ? prefixMatch[1] : (m.keyIndicator || 'Other');
-      if (!kiStats[prefix]) {
-        kiStats[prefix] = { total: 0, completed: 0, weight: 0 };
-      }
-      kiStats[prefix].total++;
-      kiStats[prefix].weight += (parseFloat(m.weightage) || 0);
-      if (m.status === 'Completed') kiStats[prefix].completed += 1;
-      else if (m.status === 'In Progress' || m.status === 'Under Review') kiStats[prefix].completed += 0.5;
+      const ki = m.keyIndicator || 'General';
+      if (!kiGroups[ki]) kiGroups[ki] = { total: 0, completed: 0 };
+      kiGroups[ki].total++;
+      if (m.status === 'Completed') kiGroups[ki].completed++;
     });
 
-    const kiLabels = Object.keys(kiStats);
-    const kiPercentages = kiLabels.map(k => Math.round((kiStats[k].completed / kiStats[k].total) * 100));
+    const kiLabels = Object.keys(kiGroups).map(k => k.replace(/Key Indicator\s*/i, 'KI '));
+    const kiData = Object.values(kiGroups).map(g => g.total > 0 ? Math.round((g.completed / g.total) * 100) : 0);
 
-    const ctxKi = document.getElementById('chart-indicator-readiness');
-    if (ctxKi) {
+    const canvasKI = document.getElementById('chart-indicator-readiness');
+    if (canvasKI) {
       if (chartIndicator) chartIndicator.destroy();
-      chartIndicator = new Chart(ctxKi, {
+      chartIndicator = new Chart(canvasKI, {
         type: 'bar',
         data: {
-          labels: kiLabels.map(k => `Indicator ${k}`),
+          labels: kiLabels,
           datasets: [{
-            label: 'Readiness %',
-            data: kiPercentages,
-            backgroundColor: 'rgba(99, 102, 241, 0.75)',
-            borderColor: '#6366f1',
-            borderWidth: 1.5,
+            label: '% Completion',
+            data: kiData,
+            backgroundColor: '#6366f1',
             borderRadius: 8
           }]
         },
@@ -1084,49 +1432,30 @@
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: { color: textColor },
-              grid: { color: gridColor }
-            },
-            x: {
-              ticks: { color: textColor },
-              grid: { display: false }
-            }
-          },
-          plugins: {
-            legend: { display: false }
+            y: { beginAtZero: true, max: 100, ticks: { callback: v => `${v}%` } }
           }
         }
       });
     }
 
-    // 2. Status Distribution Pie
-    const statusCounts = {
-      'Completed': 0,
-      'In Progress': 0,
-      'Under Review': 0,
-      'Not Started': 0
-    };
+    // Chart 2: Status Distribution
+    let comp = 0, inProg = 0, review = 0, notStart = 0;
     metrics.forEach(m => {
-      statusCounts[m.status || 'Not Started'] = (statusCounts[m.status || 'Not Started'] || 0) + 1;
+      if (m.status === 'Completed') comp++;
+      else if (m.status === 'In Progress') inProg++;
+      else if (m.status === 'Under Review') review++;
+      else notStart++;
     });
 
-    const ctxPie = document.getElementById('chart-status-pie');
-    if (ctxPie) {
+    const canvasStatus = document.getElementById('chart-status-pie');
+    if (canvasStatus) {
       if (chartStatus) chartStatus.destroy();
-      chartStatus = new Chart(ctxPie, {
+      chartStatus = new Chart(canvasStatus, {
         type: 'doughnut',
         data: {
           labels: ['Completed', 'In Progress', 'Under Review', 'Not Started'],
           datasets: [{
-            data: [
-              statusCounts['Completed'],
-              statusCounts['In Progress'],
-              statusCounts['Under Review'],
-              statusCounts['Not Started']
-            ],
+            data: [comp, inProg, review, notStart],
             backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#94a3b8']
           }]
         },
@@ -1134,70 +1463,49 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: {
-              position: 'bottom',
-              labels: { color: textColor, boxWidth: 12 }
-            }
+            legend: { position: 'bottom' }
           }
         }
       });
     }
 
-    // 3. 6-Year Compliance Trend (2020-21 to 2025-26)
-    const availCounts = [0, 0, 0, 0, 0, 0];
-    const partCounts = [0, 0, 0, 0, 0, 0];
-    const missCounts = [0, 0, 0, 0, 0, 0];
+    // Chart 3: 6-Year Trend
+    const availByYear = [];
+    const missingByYear = [];
+    const pendingByYear = [];
 
-    metrics.forEach(m => {
-      const my = m.years || {};
-      ACADEMIC_YEARS.forEach((yr, idx) => {
-        const val = my[yr] || 'Pending';
-        if (val === 'Available') availCounts[idx]++;
-        else if (val === 'Partial') partCounts[idx]++;
-        else if (val === 'Missing') missCounts[idx]++;
+    ACADEMIC_YEARS.forEach(yr => {
+      let av = 0, mi = 0, pe = 0;
+      metrics.forEach(m => {
+        const s = (m.years && m.years[yr]) || 'Pending';
+        if (s === 'Available') av++;
+        else if (s === 'Missing') mi++;
+        else pe++;
       });
+      availByYear.push(av);
+      missingByYear.push(mi);
+      pendingByYear.push(pe);
     });
 
-    const ctxFive = document.getElementById('chart-five-year');
-    if (ctxFive) {
+    const canvasFiveYear = document.getElementById('chart-five-year');
+    if (canvasFiveYear) {
       if (chartFiveYear) chartFiveYear.destroy();
-      chartFiveYear = new Chart(ctxFive, {
+      chartFiveYear = new Chart(canvasFiveYear, {
         type: 'bar',
         data: {
           labels: ACADEMIC_YEARS,
           datasets: [
-            {
-              label: 'Available (We Have)',
-              data: availCounts,
-              backgroundColor: '#10b981',
-              borderRadius: 6
-            },
-            {
-              label: 'Partial / In Progress',
-              data: partCounts,
-              backgroundColor: '#f59e0b',
-              borderRadius: 6
-            },
-            {
-              label: 'Missing Evidence (Gaps)',
-              data: missCounts,
-              backgroundColor: '#ef4444',
-              borderRadius: 6
-            }
+            { label: 'Available (We Have)', data: availByYear, backgroundColor: '#10b981', borderRadius: 6 },
+            { label: 'Missing (Gap)', data: missingByYear, backgroundColor: '#f43f5e', borderRadius: 6 },
+            { label: 'Pending Assessment', data: pendingByYear, backgroundColor: '#cbd5e1', borderRadius: 6 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            x: { stacked: true, ticks: { color: textColor }, grid: { display: false } },
-            y: { stacked: true, ticks: { color: textColor }, grid: { color: gridColor } }
-          },
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: { color: textColor, boxWidth: 12 }
-            }
+            x: { stacked: true },
+            y: { stacked: true, beginAtZero: true }
           }
         }
       });
@@ -1206,103 +1514,148 @@
 
   // --- VIEW 4: URGENT SUBMISSION AUDIT: HAVE VS DON'T HAVE ---
   function renderSubmissionAudit() {
-    updateSubmissionCounters();
     const container = document.getElementById('submission-items-container');
     if (!container) return;
 
-    let list = [...submissionDocs];
+    updateSubmissionCounters();
 
-    if (subFilterStatus !== 'ALL') {
-      list = list.filter(d => d.status === subFilterStatus);
+    let docs = submissionDocs;
+
+    // Filter status
+    if (subFilterStatus === 'HAVE') {
+      docs = docs.filter(d => d.status === 'HAVE');
+    } else if (subFilterStatus === 'DONT_HAVE') {
+      docs = docs.filter(d => d.status !== 'HAVE');
     }
 
+    // Filter dept
     if (subFilterDept !== 'ALL') {
-      list = list.filter(d => (d.dept || '').includes(subFilterDept));
+      docs = docs.filter(d => (d.dept || '').includes(subFilterDept));
     }
 
+    // Search query
     if (subSearchQuery) {
       const q = subSearchQuery.toLowerCase();
-      list = list.filter(d => 
+      docs = docs.filter(d => 
         d.title.toLowerCase().includes(q) ||
         d.metric.toLowerCase().includes(q) ||
-        d.dept.toLowerCase().includes(q) ||
-        (d.desc || '').toLowerCase().includes(q) ||
+        (d.dept || '').toLowerCase().includes(q) ||
         (d.action || '').toLowerCase().includes(q)
       );
     }
 
-    if (list.length === 0) {
+    if (docs.length === 0) {
       container.innerHTML = `
-        <div class="bg-white dark:bg-slate-850 p-10 text-center rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-400">
-          <i class="fa-solid fa-circle-check text-4xl text-emerald-500 mb-2"></i>
-          <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200">No documents found matching the filter!</h3>
-          <p class="text-xs text-slate-500 mt-1">Try switching filters or search terms.</p>
+        <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 text-center text-slate-400">
+          <i class="fa-solid fa-list-check text-4xl mb-3 text-slate-300 dark:text-slate-600"></i>
+          <p class="font-medium text-slate-600 dark:text-slate-300">No documents match the current filter selection</p>
         </div>
       `;
       return;
     }
 
-    container.innerHTML = list.map(doc => {
+    container.innerHTML = docs.map(doc => {
       const isHave = doc.status === 'HAVE';
+      const hasLink = Boolean(doc.driveUrl && doc.driveUrl.trim());
+
       return `
-        <div class="bg-white dark:bg-slate-850 rounded-2xl border p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition ${
-          isHave
-            ? 'border-l-4 border-l-emerald-500 border-slate-200 dark:border-slate-800'
-            : 'border-l-4 border-l-rose-500 border-rose-200 dark:border-rose-900/60 bg-rose-50/20'
-        }">
-          <div class="flex-1 space-y-1.5">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="px-2.5 py-0.5 rounded-lg text-xs font-mono font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
-                Metric ${escapeHtml(doc.metric)}
+        <div class="bg-white dark:bg-slate-850 rounded-2xl border ${
+          isHave ? 'border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/10' : 'border-rose-200 dark:border-rose-900/40 bg-rose-50/10'
+        } p-4 shadow-sm space-y-3 transition">
+          
+          <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+            <div class="flex items-start space-x-3">
+              <span class="w-8 h-8 rounded-xl ${isHave ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'} flex items-center justify-center text-sm font-bold flex-shrink-0 mt-0.5">
+                <i class="fa-solid ${isHave ? 'fa-check' : 'fa-xmark'}"></i>
               </span>
-              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
-                ${escapeHtml(String(doc.weight))} Marks (${escapeHtml(doc.type)})
-              </span>
-              <span class="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">
-                Dept: ${escapeHtml(doc.dept)}
-              </span>
-              <span class="text-[11px] text-slate-400 font-mono truncate max-w-[280px]">
-                <i class="fa-solid fa-folder text-amber-500 mr-1"></i>${escapeHtml(doc.folder)}
-              </span>
+              <div>
+                <div class="flex flex-wrap items-center gap-1.5 mb-1">
+                  <span class="font-mono font-bold text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200">
+                    Metric ${escapeHtml(doc.metric)}
+                  </span>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
+                    Weight: ${escapeHtml(doc.weight)}
+                  </span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300">
+                    ${escapeHtml(doc.type)}
+                  </span>
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                    Dept: ${escapeHtml(doc.dept)}
+                  </span>
+                </div>
+
+                <h4 class="font-bold text-sm text-slate-900 dark:text-white leading-snug">
+                  ${escapeHtml(doc.title)}
+                </h4>
+
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 flex flex-wrap items-center gap-2">
+                  <span>Folder: <code class="font-mono text-indigo-600 dark:text-indigo-400">${escapeHtml(doc.folder)}</code></span>
+                  
+                  ${doc.assignedFaculty ? `
+                    <span>&bull;</span>
+                    <span class="px-2 py-0.2 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold text-[10px] flex items-center space-x-1 border border-indigo-100 dark:border-indigo-800">
+                      <i class="fa-solid fa-user-tie text-[9px]"></i>
+                      <span>In-Charge: ${escapeHtml(doc.assignedFaculty)}</span>
+                    </span>
+                  ` : ''}
+                </div>
+              </div>
             </div>
 
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug">
-              ${escapeHtml(doc.title)}
-            </h3>
-            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              ${escapeHtml(doc.desc)}
-            </p>
+            <!-- Action Buttons: Status Toggle + Cloud Link -->
+            <div class="flex flex-wrap items-center gap-2 self-end sm:self-auto flex-shrink-0">
+              ${hasLink ? `
+                <a href="${escapeHtml(doc.driveUrl)}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-blue-50 hover:bg-blue-100 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 flex items-center space-x-1.5 transition shadow-xs" title="Open Cloud File">
+                  <i class="fa-brands fa-google-drive text-amber-500"></i>
+                  <span>Drive File</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                </a>
+              ` : ''}
 
-            <div class="text-xs font-semibold ${isHave ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-700 dark:text-rose-400'} flex items-start space-x-1.5 pt-0.5">
-              <i class="fa-solid ${isHave ? 'fa-circle-check text-emerald-600' : 'fa-triangle-exclamation text-rose-600'} text-xs mt-0.5"></i>
-              <span><strong>Action for Tomorrow:</strong> ${escapeHtml(doc.action)}</span>
+              <button data-sub-link-doc-id="${doc.id}" class="btn-open-sub-link px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition flex items-center space-x-1" title="Attach Google Drive URL or Assign Faculty">
+                <i class="fa-solid fa-link text-indigo-500"></i>
+                <span>${hasLink ? 'Edit Link' : '+ Attach Link'}</span>
+              </button>
+
+              <button data-doc-toggle-id="${doc.id}" class="btn-toggle-sub-doc px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 shadow-xs ${
+                isHave
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  : 'bg-rose-600 hover:bg-rose-700 text-white animate-pulse'
+              }">
+                <i class="fa-solid ${isHave ? 'fa-check-circle' : 'fa-triangle-exclamation'}"></i>
+                <span>${isHave ? 'WE HAVE' : 'WE DON\'T HAVE'}</span>
+              </button>
             </div>
           </div>
 
-          <div class="flex items-center space-x-2 flex-shrink-0 w-full sm:w-auto justify-end">
-            <button data-sub-doc-id="${doc.id}" class="btn-toggle-sub-status w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm ${
-              isHave 
-                ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
-                : 'bg-rose-600 hover:bg-rose-700 text-white ring-2 ring-rose-400/50'
-            }">
-              <i class="fa-solid ${isHave ? 'fa-circle-check text-sm' : 'fa-circle-xmark text-sm'}"></i>
-              <span>${isHave ? 'WE HAVE (READY)' : 'WE DON\'T HAVE (GAP)'}</span>
-            </button>
+          <!-- Immediate Action Plan for Tomorrow -->
+          <div class="text-xs p-2.5 rounded-xl ${isHave ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-300' : 'bg-rose-50 dark:bg-rose-950/30 text-rose-800 dark:text-rose-200'}">
+            <strong>${isHave ? 'Verification Status:' : 'Action Required for Tomorrow:'}</strong>
+            <span>${isHave ? 'Document collected and confirmed available in institutional archive.' : escapeHtml(doc.action)}</span>
           </div>
+
         </div>
       `;
     }).join('');
 
-    container.querySelectorAll('.btn-toggle-sub-status').forEach(btn => {
+    // Wire up event listeners
+    container.querySelectorAll('.btn-toggle-sub-doc').forEach(btn => {
       btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-sub-doc-id');
-        const doc = submissionDocs.find(d => d.id === id);
+        const id = btn.getAttribute('data-doc-toggle-id');
+        const doc = submissionDocs.find(d => String(d.id) === String(id));
         if (doc) {
           doc.status = doc.status === 'HAVE' ? 'DONT_HAVE' : 'HAVE';
           saveSubmissionDocs();
           renderSubmissionAudit();
           showToast(`Marked "${doc.title}" as ${doc.status === 'HAVE' ? 'WE HAVE' : 'WE DON\'T HAVE'}`);
         }
+      });
+    });
+
+    container.querySelectorAll('.btn-open-sub-link').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-sub-link-doc-id');
+        openSubLinkModal(id);
       });
     });
   }
@@ -1355,10 +1708,45 @@
   }
 
   // --- MODALS & FORMS ---
-  function openAddFileModal() {
+  function openAddFileModal(editIndex) {
     const modal = document.getElementById('modal-add-file');
     if (!modal) return;
-    document.getElementById('form-add-file').reset();
+
+    const metric = getActiveMetric();
+    const isEdit = typeof editIndex === 'number' && metric && metric.evidenceFiles && metric.evidenceFiles[editIndex];
+
+    const inputName = document.getElementById('input-file-name');
+    const inputUrl = document.getElementById('input-file-url');
+    const inputYear = document.getElementById('input-file-year');
+    const inputStatus = document.getElementById('input-file-status');
+    const inputFaculty = document.getElementById('input-file-faculty');
+    const inputCategory = document.getElementById('input-file-category');
+    const inputNotes = document.getElementById('input-file-notes');
+    const inputEditIdx = document.getElementById('input-file-edit-index');
+    const modalTitle = document.getElementById('modal-file-title');
+    const submitText = document.getElementById('btn-file-submit-text');
+
+    if (isEdit) {
+      const file = metric.evidenceFiles[editIndex];
+      if (modalTitle) modalTitle.textContent = 'Edit Evidence & Cloud Link';
+      if (submitText) submitText.textContent = 'Update Evidence';
+      if (inputEditIdx) inputEditIdx.value = String(editIndex);
+
+      if (inputName) inputName.value = file.name || '';
+      if (inputUrl) inputUrl.value = file.driveUrl || '';
+      if (inputYear) inputYear.value = file.year || '2020-21';
+      if (inputStatus) inputStatus.value = file.status || 'Verified by IQAC';
+      if (inputFaculty) inputFaculty.value = file.assignedFaculty || '';
+      if (inputCategory) inputCategory.value = file.docCategory || 'Policy & SOP';
+      if (inputNotes) inputNotes.value = file.notes || '';
+    } else {
+      if (modalTitle) modalTitle.textContent = 'Log Evidence & Cloud Document';
+      if (submitText) submitText.textContent = 'Save Evidence';
+      if (inputEditIdx) inputEditIdx.value = '';
+
+      document.getElementById('form-add-file').reset();
+    }
+
     modal.classList.remove('hidden');
   }
 
@@ -1373,16 +1761,50 @@
     if (!metric) return;
 
     const name = document.getElementById('input-file-name').value.trim();
+    const driveUrl = (document.getElementById('input-file-url')?.value || '').trim();
     const year = document.getElementById('input-file-year').value;
     const status = document.getElementById('input-file-status').value;
+    const assignedFaculty = (document.getElementById('input-file-faculty')?.value || '').trim();
+    const docCategory = document.getElementById('input-file-category')?.value || 'Policy & SOP';
     const notes = document.getElementById('input-file-notes').value.trim();
+    const editIdxStr = document.getElementById('input-file-edit-index')?.value || '';
 
     if (!name) return;
 
     if (!metric.evidenceFiles) metric.evidenceFiles = [];
-    metric.evidenceFiles.push({ name, year, status, notes });
 
-    // Also mark this year as Available
+    if (editIdxStr !== '') {
+      // Update existing
+      const editIdx = parseInt(editIdxStr, 10);
+      if (metric.evidenceFiles[editIdx]) {
+        metric.evidenceFiles[editIdx] = {
+          ...metric.evidenceFiles[editIdx],
+          name,
+          driveUrl,
+          year,
+          status,
+          assignedFaculty,
+          docCategory,
+          notes
+        };
+        showToast(`Updated "${name}"`);
+      }
+    } else {
+      // Create new
+      metric.evidenceFiles.push({
+        name,
+        driveUrl,
+        year,
+        status,
+        assignedFaculty,
+        docCategory,
+        notes,
+        dateAdded: new Date().toISOString()
+      });
+      showToast(`Logged "${name}" to Metric ${metric.metricNo} (${year})`);
+    }
+
+    // Mark this academic year as Available
     if (year && metric.years && metric.years[year] !== undefined) {
       metric.years[year] = 'Available';
     }
@@ -1391,7 +1813,166 @@
     closeAddFileModal();
     renderFolderWorkspace();
     renderFolderTree();
-    showToast(`Logged "${name}" to Metric ${metric.metricNo} (${year})`);
+  }
+
+  // --- SUBMISSION AUDIT LINK MODAL ---
+  function openSubLinkModal(docId) {
+    const modal = document.getElementById('modal-sub-link');
+    if (!modal) return;
+
+    const doc = submissionDocs.find(d => String(d.id) === String(docId));
+    if (!doc) return;
+
+    document.getElementById('sub-link-doc-id').value = String(doc.id);
+    document.getElementById('sub-link-doc-name-display').textContent = `[${doc.metric}] ${doc.title}`;
+    document.getElementById('sub-link-url').value = doc.driveUrl || '';
+    document.getElementById('sub-link-faculty').value = doc.assignedFaculty || '';
+
+    modal.classList.remove('hidden');
+  }
+
+  function closeSubLinkModal() {
+    const modal = document.getElementById('modal-sub-link');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function handleSubLinkSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('sub-link-doc-id').value;
+    const driveUrl = document.getElementById('sub-link-url').value.trim();
+    const assignedFaculty = document.getElementById('sub-link-faculty').value.trim();
+
+    const doc = submissionDocs.find(d => String(d.id) === String(id));
+    if (doc) {
+      doc.driveUrl = driveUrl;
+      doc.assignedFaculty = assignedFaculty;
+
+      // Smart auto-marking: if URL is provided, automatically mark status as HAVE!
+      if (driveUrl && doc.status !== 'HAVE') {
+        doc.status = 'HAVE';
+        showToast(`Link attached! Automatically marked as WE HAVE`);
+      } else {
+        showToast(`Updated link & faculty for "${doc.title}"`);
+      }
+
+      saveSubmissionDocs();
+      closeSubLinkModal();
+      renderSubmissionAudit();
+    }
+  }
+
+  // --- ALL SSR DRAFTS MODAL (10 QlM METRICS) ---
+  function openAllSsrModal() {
+    const modal = document.getElementById('modal-all-ssr-drafts');
+    const container = document.getElementById('ssr-drafts-list-container');
+    if (!modal || !container) return;
+
+    const metrics = getActiveMetrics();
+    const qlmMetrics = metrics.filter(m => (m.metricType || 'QlM') === 'QlM');
+
+    let totalWordsAll = 0;
+
+    container.innerHTML = qlmMetrics.map(m => {
+      const text = (m.ssrDraft || '').trim();
+      const info = getWordCountInfo(text);
+      totalWordsAll += info.words;
+
+      return `
+        <div class="bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 p-4 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+              <span class="w-7 h-7 rounded-lg bg-purple-600 text-white font-bold flex items-center justify-center text-xs">
+                ${escapeHtml(m.metricNo)}
+              </span>
+              <div>
+                <h4 class="font-bold text-xs text-slate-900 dark:text-white">${escapeHtml(m.indicator)}</h4>
+                <div class="text-[10px] text-slate-400">Weightage: ${escapeHtml(m.weightage)} Marks &bull; ${escapeHtml(m.keyIndicator || '')}</div>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-bold ${info.badgeClass}">
+                ${info.words} / 500 Words
+              </span>
+              <button data-copy-modal-metric="${m.id}" class="btn-copy-modal-draft px-2.5 py-1 bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 font-semibold rounded text-xs border border-purple-200 dark:border-purple-800 transition flex items-center space-x-1">
+                <i class="fa-regular fa-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-sans text-xs text-slate-700 dark:text-slate-200 leading-relaxed max-h-48 overflow-y-auto whitespace-pre-wrap">
+            ${escapeHtml(text || 'No draft narrative entered yet.')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Wire up individual copy buttons inside modal
+    container.querySelectorAll('.btn-copy-modal-draft').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mid = btn.getAttribute('data-copy-modal-metric');
+        const metric = qlmMetrics.find(m => m.id === mid);
+        if (metric && metric.ssrDraft) {
+          const info = getWordCountInfo(metric.ssrDraft);
+          copyToClipboard(metric.ssrDraft, `Copied Metric ${metric.metricNo} draft (${info.words} words)!`);
+        }
+      });
+    });
+
+    modal.classList.remove('hidden');
+  }
+
+  function closeAllSsrModal() {
+    const modal = document.getElementById('modal-all-ssr-drafts');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function compileAllSsrText() {
+    const metrics = getActiveMetrics();
+    const qlmMetrics = metrics.filter(m => (m.metricType || 'QlM') === 'QlM');
+
+    let fullDoc = `========================================================================
+NAAC CRITERION VI: GOVERNANCE, LEADERSHIP AND MANAGEMENT
+QUALITATIVE METRIC (QlM) 500-WORD SSR DRAFT NARRATIVES
+========================================================================
+Total Qualitative Metrics: ${qlmMetrics.length} Metrics
+Total Weightage: 61 Marks (Out of 100 Marks Criterion VI)
+Strict NAAC Manual Ceiling: 500 Words Maximum per Metric
+Generated: ${new Date().toLocaleDateString('en-IN', { dateStyle: 'full' })}
+========================================================================\n\n`;
+
+    qlmMetrics.forEach((m, idx) => {
+      const text = (m.ssrDraft || '').trim();
+      const info = getWordCountInfo(text);
+
+      fullDoc += `------------------------------------------------------------------------
+[${idx + 1}/10] METRIC ${m.metricNo} (Weightage: ${m.weightage} Marks)
+Indicator: ${m.indicator}
+Key Indicator: ${m.keyIndicator || ''}
+Word Count: ${info.words} / 500 Words (${info.words <= 500 ? 'COMPLIANT' : 'EXCEEDS LIMIT'})
+------------------------------------------------------------------------
+
+${text || '[Draft text pending]'}
+
+\n\n`;
+    });
+
+    fullDoc += `========================================================================
+END OF NAAC CRITERION VI QUALITATIVE SSR DRAFTS
+========================================================================`;
+    return fullDoc;
+  }
+
+  function downloadAllSsrTxt() {
+    const doc = compileAllSsrText();
+    downloadTextFile(`NAAC_Criterion_VI_SSR_All_QlM_Drafts_${new Date().toISOString().slice(0, 10)}.txt`, doc);
+    showToast('Downloaded all 10 QlM SSR drafts document');
+  }
+
+  function copyAllSsr() {
+    const doc = compileAllSsrText();
+    copyToClipboard(doc, 'Copied all 10 QlM drafts to clipboard!');
   }
 
   function openGithubModal() {
@@ -1478,22 +2059,29 @@
     const wb = XLSX.utils.book_new();
     const metrics = getActiveMetrics();
     const rows = [
-      ['Metric No.', 'Weightage', 'Metric / Indicator Description', 'Required Documents (SSR Manual)', ...ACADEMIC_YEARS, 'Responsible Dept', 'Action Plan', 'Status', 'Logged Evidence Count']
+      ['Metric No.', 'Weightage', 'Type', 'Metric / Indicator Description', 'SSR Draft (500 Words)', 'Draft Word Count', 'Cloud / Drive Links Count', ...ACADEMIC_YEARS, 'SCSA Mandate', 'Primary Source', 'Status', 'Logged Evidence Count']
     ];
 
     metrics.forEach(m => {
       const my = m.years || {};
       const yrStatuses = ACADEMIC_YEARS.map(yr => my[yr] || 'Pending');
+      const files = m.evidenceFiles || [];
+      const driveLinksCount = files.filter(f => f.driveUrl && f.driveUrl.trim()).length;
+      const wordInfo = getWordCountInfo(m.ssrDraft || '');
+
       rows.push([
         m.metricNo,
         m.weightage,
+        m.metricType || 'QlM',
         m.indicator,
-        m.docsRequiredRaw,
+        m.ssrDraft || '',
+        wordInfo.words,
+        driveLinksCount,
         ...yrStatuses,
-        m.responsible || '',
-        m.actionPlan || '',
+        m.scsaCollect || '',
+        m.scsaSource || m.responsible || '',
         m.status || 'Not Started',
-        (m.evidenceFiles || []).length
+        files.length
       ]);
     });
 
@@ -1501,7 +2089,7 @@
     XLSX.utils.book_append_sheet(wb, ws, currentCriterionKey.slice(0, 31));
 
     XLSX.writeFile(wb, `NAAC_${currentCriterionKey.replace(/\s+/g, '_')}_Updated_Gap_Analysis.xlsx`);
-    showToast('Updated Excel spreadsheet exported!');
+    showToast('Updated Excel spreadsheet exported with SSR drafts and Cloud links!');
   }
 
   function exportSubmissionExcel() {
@@ -1514,7 +2102,7 @@
 
     const dontHaveList = submissionDocs.filter(d => d.status !== 'HAVE');
     const dontHaveRows = [
-      ['Metric', 'Weightage', 'Type', 'Specific Document Title', 'Responsible Dept', 'Target Folder', 'Immediate Action Required for Tomorrow']
+      ['Metric', 'Weightage', 'Type', 'Specific Document Title', 'Responsible Dept', 'Assigned Faculty', 'Cloud / Drive URL', 'Target Folder', 'Immediate Action Required for Tomorrow']
     ];
     dontHaveList.forEach(d => {
       dontHaveRows.push([
@@ -1523,6 +2111,8 @@
         d.type,
         d.title,
         d.dept,
+        d.assignedFaculty || '',
+        d.driveUrl || '',
         d.folder,
         d.action
       ]);
@@ -1532,7 +2122,7 @@
 
     const haveList = submissionDocs.filter(d => d.status === 'HAVE');
     const haveRows = [
-      ['Metric', 'Weightage', 'Type', 'Specific Document Title', 'Responsible Dept', 'Target Folder', 'Status']
+      ['Metric', 'Weightage', 'Type', 'Specific Document Title', 'Responsible Dept', 'Assigned Faculty', 'Cloud / Drive URL', 'Target Folder', 'Status']
     ];
     haveList.forEach(d => {
       haveRows.push([
@@ -1541,6 +2131,8 @@
         d.type,
         d.title,
         d.dept,
+        d.assignedFaculty || '',
+        d.driveUrl || '',
         d.folder,
         'VERIFIED / AVAILABLE'
       ]);
@@ -1751,7 +2343,25 @@
       });
     }
 
-    // Modals
+    // SSR Drafts Modal triggers
+    const btnExportSsr = document.getElementById('btn-export-ssr-drafts');
+    if (btnExportSsr) btnExportSsr.addEventListener('click', openAllSsrModal);
+    const btnCloseSsr = document.getElementById('btn-close-ssr-modal');
+    if (btnCloseSsr) btnCloseSsr.addEventListener('click', closeAllSsrModal);
+    const btnDownloadAllSsr = document.getElementById('btn-download-all-ssr-txt');
+    if (btnDownloadAllSsr) btnDownloadAllSsr.addEventListener('click', downloadAllSsrTxt);
+    const btnCopyAllSsr = document.getElementById('btn-copy-all-ssr');
+    if (btnCopyAllSsr) btnCopyAllSsr.addEventListener('click', copyAllSsr);
+
+    // Submission Link modal triggers
+    const btnCloseSubLink = document.getElementById('btn-close-sub-link-modal');
+    if (btnCloseSubLink) btnCloseSubLink.addEventListener('click', closeSubLinkModal);
+    const btnCancelSubLink = document.getElementById('btn-cancel-sub-link');
+    if (btnCancelSubLink) btnCancelSubLink.addEventListener('click', closeSubLinkModal);
+    const formSubLink = document.getElementById('form-sub-link');
+    if (formSubLink) formSubLink.addEventListener('submit', handleSubLinkSubmit);
+
+    // GitHub Modal
     const btnGithub = document.getElementById('btn-github-guide');
     if (btnGithub) btnGithub.addEventListener('click', openGithubModal);
     const btnCloseGithub = document.getElementById('btn-close-github-modal');
@@ -1759,11 +2369,13 @@
     const btnDismissGithub = document.getElementById('btn-dismiss-github-modal');
     if (btnDismissGithub) btnDismissGithub.addEventListener('click', closeGithubModal);
 
+    // Backup Modal
     const btnBackup = document.getElementById('btn-backup-restore');
     if (btnBackup) btnBackup.addEventListener('click', openBackupModal);
     const btnCloseBackup = document.getElementById('btn-close-backup-modal');
     if (btnCloseBackup) btnCloseBackup.addEventListener('click', closeBackupModal);
 
+    // Evidence File Modal
     const btnCloseFile = document.getElementById('btn-close-file-modal');
     if (btnCloseFile) btnCloseFile.addEventListener('click', closeAddFileModal);
     const btnCancelFile = document.getElementById('btn-cancel-file-modal');
@@ -1806,6 +2418,47 @@
   }
 
   // --- HELPERS ---
+  function getWordCountInfo(text) {
+    if (!text || !text.trim()) {
+      return {
+        words: 0,
+        chars: 0,
+        readingTime: '0 min read',
+        badgeClass: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300',
+        badgeLabel: '0 / 500 Words (Empty)'
+      };
+    }
+    const clean = text.trim();
+    const words = clean.split(/\s+/).filter(Boolean).length;
+    const chars = clean.length;
+    const readingTime = Math.max(1, Math.round(words / 180)) + ' min read';
+
+    let badgeClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300';
+    let badgeLabel = `${words} / 500 Words (Optimal)`;
+
+    if (words > 500) {
+      badgeClass = 'bg-rose-600 text-white font-extrabold animate-pulse';
+      badgeLabel = `${words} / 500 Words (⚠️ EXCEEDS NAAC 500 LIMIT BY ${words - 500}!)`;
+    } else if (words > 450) {
+      badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300 font-bold';
+      badgeLabel = `${words} / 500 Words (Near 500 Ceiling)`;
+    }
+
+    return { words, chars, readingTime, badgeClass, badgeLabel };
+  }
+
+  function downloadTextFile(filename, text) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
   function copyToClipboard(text, msg) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(() => {

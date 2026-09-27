@@ -93,6 +93,12 @@
             <span class="hidden sm:inline">Export Excel</span>
           </button>
 
+          <!-- 500-Word QlM SSR Drafts -->
+          <button id="btn-export-ssr-drafts" title="View & Export All 10 QlM 500-Word SSR Drafts" class="flex items-center space-x-1.5 px-3 py-1.5 text-xs font-semibold bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow-sm transition">
+            <i class="fa-solid fa-file-pen"></i>
+            <span class="hidden sm:inline">SSR Drafts</span>
+          </button>
+
           <!-- Data Backup & Restore -->
           <button id="btn-backup-restore" title="Backup or Restore Data" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
             <i class="fa-solid fa-database"></i>
@@ -577,29 +583,47 @@ git push -u origin main</pre>
   </div>
 
 
-  <!-- MODAL: ADD / LOG EVIDENCE FILE -->
+  <!-- MODAL: ADD / EDIT EVIDENCE FILE & CLOUD LINK -->
   <div id="modal-add-file" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-lg w-full p-6 shadow-2xl space-y-4 animate-fade-in">
+    <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto animate-fade-in">
       
       <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
         <div class="flex items-center space-x-2">
-          <i class="fa-solid fa-file-circle-plus text-indigo-600"></i>
-          <h3 class="font-bold text-base text-slate-900 dark:text-white">Log Evidence File</h3>
+          <i id="modal-file-icon" class="fa-solid fa-file-circle-plus text-indigo-600 text-lg"></i>
+          <h3 id="modal-file-title" class="font-bold text-base text-slate-900 dark:text-white">Log Evidence & Cloud Document</h3>
         </div>
-        <button id="btn-close-file-modal" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark"></i>
+        <button id="btn-close-file-modal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
-      <form id="form-add-file" class="space-y-3 text-xs sm:text-sm">
+      <form id="form-add-file" class="space-y-3.5 text-xs sm:text-sm">
+        <input type="hidden" id="input-file-edit-index" value="" />
+
         <div>
-          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">File Name / Document Title</label>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">File Name / Document Title <span class="text-rose-500">*</span></label>
           <input type="text" id="input-file-name" required placeholder="e.g. Vision_Mission_Resolution_BoM_2022.pdf" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+        </div>
+
+        <!-- Cloud / Google Drive Link (URL) -->
+        <div class="bg-blue-50/60 dark:bg-blue-950/30 p-3 rounded-xl border border-blue-200 dark:border-blue-900/50 space-y-1.5">
+          <label class="block font-bold text-blue-900 dark:text-blue-200 text-xs flex items-center justify-between">
+            <span class="flex items-center space-x-1.5">
+              <i class="fa-brands fa-google-drive text-amber-500 text-sm"></i>
+              <span>Cloud / Google Drive / OneDrive Link (URL)</span>
+            </span>
+            <span class="text-[10px] font-normal text-blue-600 dark:text-blue-400">Optional</span>
+          </label>
+          <input type="url" id="input-file-url" placeholder="https://drive.google.com/file/d/... or OneDrive / cloud link" class="w-full px-3 py-2 rounded-lg bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-700 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-800 dark:text-slate-100 font-mono" />
+          <p class="text-[11px] text-blue-800/80 dark:text-blue-300/80 flex items-center space-x-1">
+            <i class="fa-solid fa-lock-open text-amber-500"></i>
+            <span>Set Google Drive permission to: <strong>"Anyone with link can view"</strong> for NAAC peer review access.</span>
+          </p>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Academic Year</label>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Academic Year</label>
             <select id="input-file-year" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100">
               <option value="2020-21">2020-21</option>
               <option value="2021-22">2021-22</option>
@@ -611,7 +635,7 @@ git push -u origin main</pre>
             </select>
           </div>
           <div>
-            <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Verification Status</label>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Verification Status</label>
             <select id="input-file-status" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100">
               <option value="Verified by IQAC">Verified by IQAC</option>
               <option value="Ready for SSR">Ready for SSR</option>
@@ -621,8 +645,43 @@ git push -u origin main</pre>
           </div>
         </div>
 
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Faculty In-Charge Assignment -->
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1 flex items-center space-x-1">
+              <i class="fa-solid fa-user-tie text-indigo-500"></i>
+              <span>Faculty In-Charge</span>
+            </label>
+            <input type="text" id="input-file-faculty" placeholder="e.g. Dr. R. Patel (HOD)" list="faculty-suggestions-list" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+            <datalist id="faculty-suggestions-list">
+              <option value="HOD SCSA">
+              <option value="IQAC Coordinator">
+              <option value="Department NAAC Convener">
+              <option value="Academic Coordinator">
+              <option value="Lab Technical In-Charge">
+              <option value="Exam Cell In-Charge">
+              <option value="Finance & Accounts Officer">
+            </datalist>
+          </div>
+
+          <!-- Document Category -->
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Document Category</label>
+            <select id="input-file-category" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100">
+              <option value="Policy & SOP">Policy & Standard Operating Procedure (SOP)</option>
+              <option value="Minutes & ATR">Minutes of Meeting & Action Taken Report (ATR)</option>
+              <option value="Annual Report">Annual Report & Strategic Plan</option>
+              <option value="Financial & Audit">Financial Statement & Audit Report</option>
+              <option value="FDP & Certificate">FDP / Conference Certificate & Welfare</option>
+              <option value="Geo-Tagged Photo">Geo-Tagged Photograph / Screenshot</option>
+              <option value="Official Circular">Official Circular / Resolution / Letter</option>
+              <option value="Other Evidence">Other Supporting Document</option>
+            </select>
+          </div>
+        </div>
+
         <div>
-          <label class="block font-medium text-slate-700 dark:text-slate-300 mb-1">Notes / Sign-off Authority</label>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Notes / Sign-off Authority</label>
           <input type="text" id="input-file-notes" placeholder="e.g. Signed by Registrar & Finance Officer, Annexure-1 attached" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
         </div>
 
@@ -630,8 +689,9 @@ git push -u origin main</pre>
           <button type="button" id="btn-cancel-file-modal" class="px-4 py-2 text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition">
             Cancel
           </button>
-          <button type="submit" class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition shadow-sm">
-            Save Evidence
+          <button type="submit" id="btn-save-file-submit" class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition shadow-sm flex items-center space-x-1.5">
+            <i class="fa-solid fa-check"></i>
+            <span id="btn-file-submit-text">Save Evidence</span>
           </button>
         </div>
       </form>
@@ -639,6 +699,107 @@ git push -u origin main</pre>
     </div>
   </div>
 
+
+  <!-- MODAL: ALL SSR QUALITATIVE DRAFTS (10 QlM METRICS) -->
+  <div id="modal-all-ssr-drafts" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-4xl w-full p-6 shadow-2xl space-y-4 max-h-[92vh] flex flex-col animate-fade-in">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center text-lg shadow-sm shadow-purple-500/20">
+            <i class="fa-solid fa-file-pen"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base text-slate-900 dark:text-white">Criterion VI: 500-Word SSR Qualitative (QlM) Drafts</h3>
+            <p class="text-xs text-slate-500">10 Qualitative Metrics • Total 61 Marks Weightage • Strict 500-Word NAAC Limit</p>
+          </div>
+        </div>
+        <button id="btn-close-ssr-modal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/60 rounded-xl p-3 text-xs text-purple-900 dark:text-purple-200">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-circle-check text-purple-600 text-sm"></i>
+          <span>All 10 SCSA narrative drafts compiled. Review word counts and copy directly into the NAAC SSR portal.</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button id="btn-download-all-ssr-txt" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-lg transition shadow-xs flex items-center space-x-1.5">
+            <i class="fa-solid fa-download"></i>
+            <span>Download All (.txt)</span>
+          </button>
+          <button id="btn-copy-all-ssr" class="px-3 py-1.5 bg-white dark:bg-slate-700 hover:bg-slate-100 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-700 font-semibold rounded-lg transition shadow-xs flex items-center space-x-1.5">
+            <i class="fa-regular fa-copy"></i>
+            <span>Copy All</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable list of drafts -->
+      <div class="flex-1 overflow-y-auto space-y-4 pr-1" id="ssr-drafts-list-container">
+        <!-- Injected by JavaScript -->
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- MODAL: ATTACH CLOUD LINK & ASSIGN FACULTY TO SUBMISSION DOC -->
+  <div id="modal-sub-link" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-700 max-w-md w-full p-5 shadow-2xl space-y-4 animate-fade-in">
+      
+      <div class="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-700">
+        <div class="flex items-center space-x-2">
+          <i class="fa-solid fa-link text-indigo-600"></i>
+          <h3 class="font-bold text-sm text-slate-900 dark:text-white">Attach Evidence Link & Assign Faculty</h3>
+        </div>
+        <button id="btn-close-sub-link-modal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-sub-link" class="space-y-3 text-xs">
+        <input type="hidden" id="sub-link-doc-id" value="" />
+        
+        <div>
+          <label class="block font-semibold text-slate-600 dark:text-slate-400 mb-1">Document Item</label>
+          <div id="sub-link-doc-name-display" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-semibold text-xs leading-relaxed"></div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <i class="fa-brands fa-google-drive text-amber-500 mr-1"></i> Google Drive / Cloud Document URL
+          </label>
+          <input type="url" id="sub-link-url" placeholder="https://drive.google.com/file/d/..." class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-800 dark:text-slate-100 font-mono text-xs" />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <i class="fa-solid fa-user-tie text-indigo-500 mr-1"></i> Faculty In-Charge / Uploader
+          </label>
+          <input type="text" id="sub-link-faculty" placeholder="e.g. Dr. R. Patel (HOD) / Prof. Sharma" list="faculty-list-sub" class="w-full px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-rose-500 text-slate-800 dark:text-slate-100" />
+          <datalist id="faculty-list-sub">
+            <option value="HOD SCSA">
+            <option value="IQAC Coordinator">
+            <option value="Department NAAC Convener">
+            <option value="Lab Technical In-Charge">
+            <option value="Finance & Accounts Officer">
+          </datalist>
+        </div>
+
+        <div class="pt-3 flex justify-end space-x-2 border-t border-slate-200 dark:border-slate-700">
+          <button type="button" id="btn-cancel-sub-link" class="px-3.5 py-1.5 text-xs text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-1.5 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-sm transition">
+            Save Link & Assignee
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
 
   <!-- MODAL: BACKUP & RESTORE -->
   <div id="modal-backup" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
