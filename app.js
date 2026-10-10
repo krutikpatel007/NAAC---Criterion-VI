@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'naac_tracker_data_v2';
+  const STORAGE_KEY = 'naac_tracker_data_v3';
   const SUBMISSION_STORAGE_KEY = 'naac_submission_docs_v2';
   const THEME_KEY = 'naac_tracker_theme';
 
@@ -66,11 +66,34 @@
   // --- DATA LOADING & PERSISTENCE ---
   function loadData() {
     const stored = localStorage.getItem(STORAGE_KEY);
+    const oldV2Stored = localStorage.getItem('naac_tracker_data_v2');
+
     if (stored) {
       try {
         appData = JSON.parse(stored);
       } catch (e) {
         console.error('Failed to parse saved data, loading defaults.', e);
+        appData = JSON.parse(JSON.stringify(window.DEFAULT_NAAC_DATA || {}));
+      }
+    } else if (oldV2Stored) {
+      // Migrate from v2: load defaults with updated audit years, but preserve logged files and custom drafts
+      try {
+        const v2Data = JSON.parse(oldV2Stored);
+        appData = JSON.parse(JSON.stringify(window.DEFAULT_NAAC_DATA || {}));
+        
+        if (v2Data['Criterion VI'] && v2Data['Criterion VI'].metrics) {
+          v2Data['Criterion VI'].metrics.forEach(oldM => {
+            const targetM = (appData['Criterion VI'].metrics || []).find(m => m.id === oldM.id);
+            if (targetM) {
+              if (oldM.evidenceFiles && oldM.evidenceFiles.length > 0) {
+                targetM.evidenceFiles = oldM.evidenceFiles;
+              }
+              if (oldM.status) targetM.status = oldM.status;
+            }
+          });
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      } catch (e) {
         appData = JSON.parse(JSON.stringify(window.DEFAULT_NAAC_DATA || {}));
       }
     } else {
