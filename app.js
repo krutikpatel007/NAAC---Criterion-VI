@@ -325,7 +325,7 @@
                   ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
               }">${haveYearsCount}/6 Yrs</span>
-              <span class="text-[10px] px-1.5 py-0.2 rounded font-mono ${
+              <span class="text-[10px] px-1.5 py-0.5 rounded font-mono ${
                 isActive ? 'bg-indigo-700/80 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
               }">${fileCount}</span>
             </div>
@@ -749,7 +749,7 @@
                     <div class="flex items-center space-x-2 truncate">
                       <span class="font-medium text-xs text-slate-900 dark:text-white truncate font-mono">${escapeHtml(file.name)}</span>
                       ${file.docCategory ? `
-                        <span class="px-2 py-0.2 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex-shrink-0">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex-shrink-0">
                           ${escapeHtml(file.docCategory)}
                         </span>
                       ` : ''}
@@ -759,7 +759,7 @@
                       <span class="font-semibold text-indigo-600 dark:text-indigo-400">${escapeHtml(file.year || '2020-21')}</span>
                       <span>&bull;</span>
                       ${file.assignedFaculty ? `
-                        <span class="px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold text-[10px] flex items-center space-x-1 border border-indigo-100 dark:border-indigo-800">
+                        <span class="px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold text-[10px] flex items-center space-x-1 border border-indigo-100 dark:border-indigo-800">
                           <i class="fa-solid fa-user-tie text-[9px]"></i>
                           <span>${escapeHtml(file.assignedFaculty)}</span>
                         </span>
@@ -1593,7 +1593,7 @@ Date: ${new Date().toLocaleDateString('en-IN', { dateStyle: 'full' })}
                   
                   ${doc.assignedFaculty ? `
                     <span>&bull;</span>
-                    <span class="px-2 py-0.2 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold text-[10px] flex items-center space-x-1 border border-indigo-100 dark:border-indigo-800">
+                    <span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 font-semibold text-[10px] flex items-center space-x-1 border border-indigo-100 dark:border-indigo-800">
                       <i class="fa-solid fa-user-tie text-[9px]"></i>
                       <span>In-Charge: ${escapeHtml(doc.assignedFaculty)}</span>
                     </span>

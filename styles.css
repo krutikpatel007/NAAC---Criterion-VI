@@ -16,7 +16,7 @@ code, pre, .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Custom scrollbars */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -32,7 +32,32 @@ code, pre, .font-mono {
   background: rgba(107, 114, 128, 0.7);
 }
 
-/* Glassmorphism helpers */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.4);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+/* Dark Mode Background Fallbacks for Custom Slate Shades */
+.dark .bg-slate-850 {
+  background-color: #141d2f !important;
+}
+.dark .from-slate-850 {
+  --tw-gradient-from: #141d2f var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgb(20 29 47 / 0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+.dark .to-slate-850 {
+  --tw-gradient-to: #141d2f var(--tw-gradient-to-position) !important;
+}
+
+/* Custom Shadow Utility */
+.shadow-xs {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Glassmorphism Helpers */
 .glass-panel {
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
@@ -44,7 +69,7 @@ code, pre, .font-mono {
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Interactive badges */
+/* Interactive Badges & Hover Effects */
 .year-pill {
   transition: all 0.15s ease-in-out;
   cursor: pointer;
@@ -52,10 +77,24 @@ code, pre, .font-mono {
 }
 .year-pill:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Animation utilities */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+/* Accessible Focus States */
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Animation Utilities */
 .animate-fade-in {
   animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -69,6 +108,22 @@ code, pre, .font-mono {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Modal Entry Animation */
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-in {
+  animation: modalScaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Print Optimization for SSR Reports */
